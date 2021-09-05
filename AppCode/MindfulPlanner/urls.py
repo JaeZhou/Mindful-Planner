@@ -14,21 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.views.generic.base import TemplateView
-from MindfulPlanner import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    # path('', TemplateView.as_view(template_name='home.html'), name='home'),
-
-    # The home page
-    path('dashboard/', views.index, name='home'),
-
-    path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
-
-    # Matches any html file
-    re_path(r'^.*\.*', views.pages, name='pages'),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
 ]
