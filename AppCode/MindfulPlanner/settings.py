@@ -11,11 +11,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+# Build path to collect files --> used in collecting css files 
+CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -120,6 +123,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Calling static folder
+STATIC_ROOT = os.path.join(CORE_DIR, 'static')
+
+# Extra places for collectstatic to find static files. 
+# Used in calling static folder inside "MindfulPlaner folder" (containing css files)
+STATICFILES_DIRS = (
+     os.path.join(CORE_DIR, 'MindfulPlanner/static'),
+   
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
