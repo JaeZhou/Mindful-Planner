@@ -7751,7 +7751,7 @@ fieldset:disabled .btn {
 }
 
 .align-self-center {
-  align-self: center !important;
+  align-self: center;
 }
 
 .align-self-baseline {
