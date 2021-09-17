@@ -24,7 +24,7 @@ def register(request):
         
         if form.is_valid():
             form.save()
-            send_activation_email() # sending the user an activation email
+            #send_activation_email() # sending the user an activation email
             return redirect('login')
         
     else: 
