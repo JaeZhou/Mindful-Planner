@@ -14,6 +14,7 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>To-Do List -- Need to be customized</h6>
+            <a href = "{% url 'task-create' %}">Add Task</a>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
@@ -21,12 +22,14 @@
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Task Title</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Category</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Time</th>
                    
                     <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
                 <tbody>
+                  {% for task in tasks %}
                   <tr>
                     <td>
                       <div class="d-flex px-2 py-1">
@@ -34,13 +37,13 @@
                           <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">491B Project</h6>
-                          <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
+                                                 
+                          <h6 class="mb-0 text-sm">{{task.name}}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="text-xs font-weight-bold mb-0">School</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{task.due_date}}</p> 
                     </td>
               
                     <td class="align-middle">
@@ -53,7 +56,8 @@
                         <i class="fa fa-ellipsis-v text-xs"></i>
                       </button>
                     </td>
-                  </tr>  
+                  </tr>
+                {% endfor %}
               </table>
             </div>
           </div>

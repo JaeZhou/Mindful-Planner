@@ -16,18 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from todolist.views import ToDoList
 from MindfulPlanner import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('todolist/', include('todolist.urls')),
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
 
     # The home page
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
+    path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
