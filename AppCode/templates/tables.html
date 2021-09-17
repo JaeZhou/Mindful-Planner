@@ -29,6 +29,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- for list that'll display each task -->
                   {% for task in tasks %}
                   <tr>
                     <td>
@@ -47,8 +48,9 @@
                     </td>
               
                     <td class="align-middle">
-                      <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                        Edit
+                      <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
+                      <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                        Edit-->
                       </a>
                     </td>
                     <td class="align-middle">
