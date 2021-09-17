@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Make Django use our custom User model instead of default version
+AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
