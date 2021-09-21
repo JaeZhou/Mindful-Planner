@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from .models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class RegistrationForm(UserCreationForm):
@@ -17,13 +17,8 @@ class RegistrationForm(UserCreationForm):
             'password2'
         )
 
-    def save(self, commit=True):
-        user = super(RegistrationForm, self).save(commit=False) # False because we haven't finished saving data
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email_ = self.cleaned_data['email']
+    def clean(self):
 
-        if commit:
-            user.save()
-
-        return user
+        cleaned_data = super().clean()
+        
+        return cleaned_data
