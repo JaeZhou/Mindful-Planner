@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'todolist',
+    'crispy_forms'
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,6 +123,13 @@ USE_L10N = True
 
 USE_TZ = True
 
+# EMAIL CONFIGURATION FOR EMAIL VERIFICATION
+EMAIL_FROM_USER = 'MindfulPlannerOfficial@gmail.com' # Need to change this to hide info
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'MindfulPlannerOfficial@gmail.com'
+EMAIL_HOST_PASSWORD = 'NickisaBitch' # .......
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
