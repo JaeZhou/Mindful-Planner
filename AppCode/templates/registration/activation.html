@@ -1,0 +1,11 @@
+{% autoescape off %}
+
+Hello {{user.username}}
+
+Please click below to verify your account.
+
+http://{{domain}}{%csrf_token%}{% url 'activate' uidb64=uid token=token%}
+
+
+
+{% endautoescape %}
