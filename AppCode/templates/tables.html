@@ -3,7 +3,36 @@
 {% block title %} UI Tables {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .sub-menu {
+    float: left;
+    overflow: hidden;
+  }
+
+.sub-menu-items a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.sub-menu-items {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.sub-menu:hover .sub-menu-items {
+  display: block;
+}
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -13,7 +42,7 @@
       <div class="col-12">
         <div class="card mb-4">
           <div class="card-header pb-0">
-            <h6>To-Do List -- Need to be customized</h6>
+            <h6>To-Do List</h6>
             <a href = "{% url 'task-create' %}">Add Task</a>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
@@ -54,9 +83,15 @@
                       </a>
                     </td>
                     <td class="align-middle">
-                      <button class="btn btn-link text-secondary mb-0">
-                        <i class="fa fa-ellipsis-v text-xs"></i>
-                      </button>
+                      <div class="sub-menu">
+                        <button class ="btn btn-link text-secondary mb-0">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                        <div class="sub-menu-items">
+                          <a href = "{% url 'task-edit' task.id %}">Edit</a>
+                          <a href = "{% url 'task-delete' task.id %}">Delete</a>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 {% endfor %}
