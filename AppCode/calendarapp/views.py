@@ -1,4 +1,4 @@
-
+#calendarapp/views.py
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
@@ -17,13 +17,13 @@ class Calendar(ListView):
 class EventCreate(CreateView):
     model = Event
     template_name = "event-form.html"
-    fields = ['event title', 'day', 'startTime', 'endTime', 'description', 'complete']
+    fields = ['event title', 'day', 'startTime', 'endTime', 'description']
     success_url = reverse_lazy('calendar')
     
 #Event editing view in task_edit
 class EventEdit(UpdateView):
     model = Event
-    template_name = 'event-edit-form.html'
+    template_name = 'event-form.html'
     fields = ['event title', 'day', 'startTime', 'endTime', 'description', 'complete']
     success_url = reverse_lazy('calendar')
 

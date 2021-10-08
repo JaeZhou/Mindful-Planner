@@ -42,7 +42,7 @@ calen
                 </thead>
                 <tbody>
                   <!-- for list that'll display each task -->
-                  {% for Event in Event %}
+                  {% for event in events %}
                   <tr>
                     <td>
                       <div class="d-flex px-2 py-1">
@@ -51,28 +51,28 @@ calen
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                                                  
-                          <h6 class="mb-0 text-sm">{{Event.title}}</h6>
+                          <h6 class="mb-0 text-sm">{{event.title}}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="text-xs font-weight-bold mb-0">{{Event.day}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.day}}</p> 
                     </td>
               
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{Event.startTime}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.startTime}}</p> 
                     </td>
 
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{Event.endTime}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.endTime}}</p> 
                     </td>
 
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{Event.description}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
                     </td>
 
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{Event.complete}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.complete}}</p> 
                     </td>
 
                     <td class="align-middle">

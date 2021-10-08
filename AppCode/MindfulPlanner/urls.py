@@ -29,14 +29,13 @@ urlpatterns = [
     path('customers/', include("customers.urls")),
     path('todolist/', include('todolist.urls')), 
     path('calendarapp/', include('calendarapp.urls')),
-
-    # path('', TemplateView.as_view(template_name='home.html'), name='home'),
-
+    
     # The home page
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
     path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
+    path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
