@@ -1,9 +1,8 @@
 
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse
-from django.views.generic import ListView
 from todolist.models import Task
-from django.db import models
+from calendarapp.models import Event
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
@@ -18,7 +17,8 @@ import datetime
 def all_tasks(request):
     today = datetime.date.today()
     task_list = Task.objects.filter(user=request.user, due_date=today)
-    context = {'tasks':task_list}
+    event_list = Event.objects.filter(user=request.user, day=today)
+    context = {'tasks':task_list, 'events':event_list}
     return render(request, 'schedule.html', context)
 
 def delete_task(request, id):
