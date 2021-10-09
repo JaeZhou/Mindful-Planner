@@ -6,7 +6,6 @@ from accounts.models import User
 #Calendar event model
 
 class Event(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=200)
     day = models.DateField(u'Day of the event', help_text=u'Day of the event')
     startTime = models.TimeField(u'Starting time', help_text=u'Starting time', blank=True)

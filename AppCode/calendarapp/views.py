@@ -17,14 +17,14 @@ class Calendar(ListView):
 class EventCreate(CreateView):
     model = Event
     template_name = "event-form.html"
-    fields = ['event title', 'day', 'startTime', 'endTime', 'description']
+    fields = ['title', 'day', 'startTime', 'endTime', 'description']
     success_url = reverse_lazy('calendar')
     
 #Event editing view in task_edit
 class EventEdit(UpdateView):
     model = Event
     template_name = 'event-form.html'
-    fields = ['event title', 'day', 'startTime', 'endTime', 'description', 'complete']
+    fields = ['title', 'day', 'startTime', 'endTime', 'description', 'complete']
     success_url = reverse_lazy('calendar')
 
 #Event delete view 
