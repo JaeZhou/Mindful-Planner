@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('customers/', include("customers.urls")),
     path('todolist/', include('todolist.urls')),
+    path('dailyschedule/', include('dailyschedule.urls')),
 
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
 
