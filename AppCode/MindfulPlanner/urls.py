@@ -27,9 +27,14 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('customers/', include("customers.urls")),
-    path('todolist/', include('todolist.urls')), 
+
+    path('todolist/', include('todolist.urls')),
+    path('dailyschedule/', include('dailyschedule.urls')),
+  
+    # path('', TemplateView.as_view(template_name='home.html'), name='home'),
+  
     path('calendarapp/', include('calendarapp.urls')),
-    
+
     # The home page
     path('dashboard/', views.index, name='home'),
 
