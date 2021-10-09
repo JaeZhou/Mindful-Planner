@@ -1,16 +1,19 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} To-Do list {% endblock title %}
+{% block title %} Calendar {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+{% endblock stylesheets %}
 
 {% block content %}
+
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="index.html">Mindful Planner</a></li>
     <li class="breadcrumb-item text-dark active" aria-current="page">
-     To-Do List
+     Calendar
     </li>
   </ol>
 </nav>
@@ -21,24 +24,25 @@
       <div class="col-12">
         <div class="card mb-4">
           <div class="card-header pb-0">
-            <h6>To-Do List -- Need to be customized</h6>
-            <a href = "{% url 'task-create' %}">Add Task</a>
+            <h6>Calendar</h6>
+            <a href = "{% url 'event-create' %}">Add Event</a>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
               <table class="table align-items-center mb-0">
                 <thead>
                   <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Task Title</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Time</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
                    
                     <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <!-- for list that'll display each task -->
-                  {% for task in tasks %}
+                  {% for event in events %}
                   <tr>
                     <td>
                       <div class="d-flex px-2 py-1">
@@ -47,20 +51,30 @@
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                                                  
-                          <h6 class="mb-0 text-sm">{{task.name}}</h6>
+                          <h6 class="mb-0 text-sm">{{event.title}}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="text-xs font-weight-bold mb-0">{{task.due_date}}</p> 
+                      <p class="text-xs font-weight-bold mb-0">{{event.day}}</p> 
                     </td>
               
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
-                      <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                        Edit-->
-                      </a>
+                      <p class="text-xs font-weight-bold mb-0">{{event.startTime}}</p> 
                     </td>
+
+                    <td class="align-middle">
+                      <p class="text-xs font-weight-bold mb-0">{{event.endTime}}</p> 
+                    </td>
+
+                    <td class="align-middle">
+                      <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
+                    </td>
+<!-- 
+                    <td class="align-middle">
+                      <p class="text-xs font-weight-bold mb-0">{{event.complete}}</p> 
+                    </td> -->
+
                     <td class="align-middle">
                       <button class="btn btn-link text-secondary mb-0">
                         <i class="fa fa-ellipsis-v text-xs"></i>
@@ -75,16 +89,16 @@
       </div>
     </div>
 
-   
-
     {% include "includes/footer.html" %}
     
-  </div>
+  <!-- </div> -->
 
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
+
+  
 
   <script>
     var win = navigator.platform.indexOf('Win') > -1;

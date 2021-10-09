@@ -1,6 +1,5 @@
 # to-do-list/urls.py
 from django.urls import path
-
 from .views import ToDoList, TaskCreate, TaskEdit, TaskDelete
 from django.views.generic.base import TemplateView
 

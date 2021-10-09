@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'todolist',
     'dailyschedule',
     'crispy_forms'
+    'calendarapp',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
