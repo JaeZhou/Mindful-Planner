@@ -19,6 +19,11 @@ class EventCreate(CreateView):
     template_name = "event-form.html"
     fields = ['title', 'day', 'startTime', 'endTime', 'description']
     success_url = reverse_lazy('calendar')
+
+    #Validates that user form is valid
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(EventCreate, self).form_valid(form)
     
 #Event editing view in task_edit
 class EventEdit(UpdateView):
