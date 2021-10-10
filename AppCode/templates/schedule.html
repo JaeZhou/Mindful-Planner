@@ -68,7 +68,7 @@
                     </a>
                     
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="{% url 'task-edit' task.id %}">Edit</a></li>
                     <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
                     <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li>
                     </ul>
@@ -116,7 +116,7 @@
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
                     <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
                     <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
-                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Delete</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="{% url 'event-delete' event.id %}">Delete</a></li>
                     </ul>
                     </td>
                     
