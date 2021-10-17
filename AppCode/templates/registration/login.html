@@ -1,5 +1,6 @@
 {% extends 'layouts/base-fullscreen.html' %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 
 {% block title %} Sign In {% endblock title %}
 
@@ -31,6 +32,10 @@
                   Don't have an account?
                   <a href="{% url 'register' %}" class="text-info text-gradient font-weight-bold">Sign Up</a>
                 </p>
+                <p class="mb-4 text-sm mx-auto">
+                  <a href="{% provider_login_url 'google' %}">Login With Google</a>
+                </p>
+
               </div>
             </div>
           </div>
