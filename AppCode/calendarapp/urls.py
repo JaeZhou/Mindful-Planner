@@ -5,5 +5,5 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     path('event-create/', EventCreate.as_view(), name='event-create'),
     path('event-edit/<int:pk>/', EventEdit.as_view(), name='event-edit'),
-    path('eventt-delete/<int:pk>/', EventDelete.as_view(), name='event-delete'),
+    path('event-delete/<int:pk>/', EventDelete.as_view(), name='event-delete'),
 ]
