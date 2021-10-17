@@ -39,3 +39,13 @@ class TaskDelete(DeleteView):
     template_name = 'task_delete.html'
     context_object_name = 'task'
     success_url = reverse_lazy('tables')
+
+def orderTasks(request):
+    #get all tasks
+    allTasks = Task.objects.all()
+    #sort by day and time
+    sortedTasks = Task.objects.order_by('due_date').order_by('due_time')
+
+    context = {'allsortedTasks': sortedTasks}
+
+    return render(request, 'tables', context)

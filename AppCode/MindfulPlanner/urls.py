@@ -13,27 +13,34 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django import urls
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from todolist.views import ToDoList
 from MindfulPlanner import views
+from calendarapp.views import Calendar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('customers/', include("customers.urls")),
-    path('todolist/', include('todolist.urls')),
 
+    path('todolist/', include('todolist.urls')),
+    path('dailyschedule/', include('dailyschedule.urls')),
+  
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
+  
+    path('calendarapp/', include('calendarapp.urls')),
 
     # The home page
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
     path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
+    path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
