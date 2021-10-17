@@ -41,7 +41,6 @@
                   <!-- for list that'll display each task -->
                   {% for task in tasks %}
                   <tr>
-
                     <td>
                       <div class="d-flex px-2 py-1"> 
                         <div class="d-flex flex-column justify-content-center">
@@ -50,18 +49,15 @@
                         </div>
                       </div>
                     </td>
-
                     <td>
                       <p class="text-xs font-weight-bold mb-0">{{task.due_date}}</p> 
                     </td>
-              
                     <td class="align-middle">
                       <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
                       <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                         Edit-->
                       </a>
                     </td>
-
                     <td class="align-middle">
                     <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-secondary"></i>
@@ -73,6 +69,9 @@
                     <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li>
                     </ul>
                     </td>
+
+                    {% empty %}
+                    <li>Nothing on your to-do list today!</li>
                     
                   </tr>
                 {% endfor %}
@@ -85,8 +84,10 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
-                  <th class="text-secondary opacity-7"></th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Event Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
                 </tr>
               </thead>
 
@@ -108,6 +109,20 @@
                       <p class="text-xs font-weight-bold mb-0">{{event.day}}</p> 
                     </td>
 
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{event.startTime}}</p> 
+                    </td>
+
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{event.endTime}}</p> 
+                    </td>
+
+                    
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
+                    </td>
+
+
                     <td class="align-middle">
                     <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-secondary"></i>
@@ -119,6 +134,9 @@
                     <li><a class="dropdown-item border-radius-md" href="{% url 'event-delete' event.id %}">Delete</a></li>
                     </ul>
                     </td>
+
+                    {% empty %}
+                    <li>Nothing is happening today!</li>
                     
                   </tr>
                 {% endfor %}

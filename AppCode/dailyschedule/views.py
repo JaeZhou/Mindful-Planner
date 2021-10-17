@@ -6,7 +6,11 @@ from calendarapp.models import Event
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
+
 from .forms import TaskForm
+
+from accounts.models import User
+
 
 
 # class SearchTasks(ListView):
@@ -16,9 +20,10 @@ from .forms import TaskForm
 
 
 def all_tasks(request):
+    #fix this timezone stuff
     today = datetime.date.today()
-    task_list = Task.objects.filter(user=request.user, due_date=today)
-    event_list = Event.objects.filter(user=request.user, day=today)
+    task_list = Task.objects.filter(user=request.user, due_date__year=today.year, due_date__month=today.month, due_date__day=today.day)
+    event_list = Event.objects.filter(user=request.user, day__year=today.year, day__month=today.month, day__day=today.day)
     context = {'tasks':task_list, 'events':event_list}
     return render(request, 'schedule.html', context)
 
