@@ -6,6 +6,7 @@ from calendarapp.models import Event
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
+from accounts.models import User
 
 
 # class SearchTasks(ListView):
@@ -15,7 +16,7 @@ import datetime
 
 
 def all_tasks(request):
-    #TODO fix this timezone stuff
+    #fix this timezone stuff
     today = datetime.date.today()
     task_list = Task.objects.filter(user=request.user, due_date__year=today.year, due_date__month=today.month, due_date__day=today.day)
     event_list = Event.objects.filter(user=request.user, day__year=today.year, day__month=today.month, day__day=today.day)

@@ -54,18 +54,22 @@
                     <td>
                       <p class="text-xs font-weight-bold mb-0">{{task.due_date}}</p> 
                     </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
+                    </td>
               
                     <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
-                      <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                        Edit-->
+                      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
                       </a>
+                      
+                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li>
+                      </ul>
                     </td>
-                    <td class="align-middle">
-                      <button class="btn btn-link text-secondary mb-0">
-                        <i class="fa fa-ellipsis-v text-xs"></i>
-                      </button>
-                    </td>
+
                   </tr>
                 {% endfor %}
               </table>

@@ -37,7 +37,7 @@
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
                    
-                    <th class="text-secondary opacity-7"></th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -70,16 +70,22 @@
                     <td class="align-middle">
                       <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
                     </td>
-<!-- 
-                    <td class="align-middle">
-                      <p class="text-xs font-weight-bold mb-0">{{event.complete}}</p> 
-                    </td> -->
 
                     <td class="align-middle">
-                      <button class="btn btn-link text-secondary mb-0">
-                        <i class="fa fa-ellipsis-v text-xs"></i>
-                      </button>
+                      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                      </a>
+                      
+                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="{% url 'event-delete' event.id %}">Delete</a></li>
+                      </ul>
                     </td>
+                    
+                    {% empty %}
+                    <li>Nothing is happening!</li>
+
                   </tr>
                 {% endfor %}
               </table>
