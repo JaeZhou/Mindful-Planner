@@ -137,10 +137,14 @@ EMAIL_PORT = 587
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
 
 # Calling static folder
-STATIC_ROOT = os.path.join(CORE_DIR, 'static')
+# Calling static folder
+STATIC_ROOT = os.path.join(CORE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(CORE_DIR, 'MindfulPlanner/static/media')
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
 
 # Extra places for collectstatic to find static files. 
 # Used in calling static folder inside "MindfulPlaner folder" (containing css files)
