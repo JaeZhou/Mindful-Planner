@@ -6,6 +6,7 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="index.html">Mindful Planner</a></li>
@@ -22,9 +23,10 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>To-Do List</h6>
-            <a href = "{% url 'task-create' %}"><button class = "btn btn-secondary">Add Task</button></a>
+            <!-- <a href = "{% url 'task-create' %}"><button class = "btn btn-secondary">Add Task</button></a> -->
+            <a data-toggle="modal" href="#TaskCreateModal"><button class="btn btn-secondary">Add Task</button></a>
+            
           </div>
-          <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
               <table class="table align-items-center mb-0">
                 <thead>
@@ -61,8 +63,10 @@
                       </a>
                       
                       <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a class="dropdown-item border-radius-md" href="{% url 'task-edit' task.id %}">Edit</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li>
+                      <!-- <li><a class="dropdown-item border-radius-md" href="{% url 'task-edit' task.id %}">Edit</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li> -->
+                      <li><a class="dropdown-item border-radius-md" data-toggle="modal" href="#TaskEditModal">Edit</a></li>
+                      <li><a class="dropdown-item border-radius-md" data-toggle="modal" href="#TaskDeleteModal">Delete</a></li>
                       </ul>
                     </td>
 
@@ -75,6 +79,83 @@
       </div>
     </div>
 
+
+    <!--Start of Task Form Modal -->
+<div class="modal fade" id="TaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="TaskCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskCreateModalLabel">Create Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="task-form" action="{% url 'task-create' %}">
+          <div>
+            <label for="name">Name </label>
+            <input id="name" type="text" name="name" value="{{name}}" />
+          </div>
+          <div>
+            <label for="complete">Complete</label>
+          <input id="complete" type="checkbox" />
+          </div>
+          <div>
+            <label for="due_date">Due Date</label>
+          <input id="due_date" type="text" name="due_date" value="{{due_date}}" />
+          </div>
+          <div>
+            <label for="due_time">Due Time</label>
+          <input id="due_time" type="text" name="due_time" value="{{due_time}}" />
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="task-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Task Form Modal -->
+
+<!-- Start of Task Edit Modal -->
+<div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-header">
+      <h5 class="modal-title" id="TaskEditModalLabel">Edit {{task.name}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+
+    </div>
+  </div>
+</div>
+<!-- End of Task Edit Modal -->
+
+<!-- Start of Task Delete Modal -->
+<div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-header">
+      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete {{task.name}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+
+    </div>
+  </div>
+</div>
+<!-- End of Task Delete Modal -->
    
 
     {% include "includes/footer.html" %}
@@ -85,6 +166,32 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
+
+  <script>
+    var frm = $('#task-form');    
+    $( document ).ready(function() {
+
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+
+      $("#task-form-submit").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: frm.attr('method'),
+          url: frm.attr('action'),
+          data: frm.serialize(),
+          success: function(data) {
+            console.log('Submission was successful.');
+          },
+          error: function(data) {
+            console.log('An error occurred.');
+          },
+        });
+      });
+    });
+
+  </script>
 
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
