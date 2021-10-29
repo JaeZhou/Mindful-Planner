@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dailyschedule',
     'crispy_forms',
     'calendarapp',
+    'django_extensions',
 
     # Google auth stuff
     'django.contrib.sites',
