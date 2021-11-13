@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'calendarapp',
     'django_extensions',
+    'sass_processor',
 
     # Google auth stuff
     'django.contrib.sites',
@@ -152,7 +153,13 @@ STATIC_ROOT = os.path.join(CORE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(CORE_DIR, 'MindfulPlanner/static/media')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
 
 # Extra places for collectstatic to find static files. 
 # Used in calling static folder inside "MindfulPlaner folder" (containing css files)

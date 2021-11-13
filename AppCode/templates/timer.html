@@ -1,0 +1,270 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block title %} Timer {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% load sass_tags %}
+<link href="{% sass_src 'static/assets/css/timer.scss' %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
+    <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="{% url 'home' %}">Mindful Planner</a></li>
+    <li class="breadcrumb-item text-dark active" aria-current="page">
+     Timer
+    </li>
+  </ol>
+</nav>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+
+        <div class="card-header pb-0" style="margin:0 auto;">
+          <h3>Pomodoro Timer</h6>
+        </div>
+
+        <!-- ADDED CODE -->
+        
+        <div id="pomodoro" style="margin:0 auto;">
+            <div id="clock">
+                <div id="timer">
+                    <div id="title">Ready?</div>
+                    <div id="countdown">
+                        <span id="minutes">30</span>
+                        <span id="seconds">00</span>
+                    </div>
+                    
+                    <div id="controls" class="reset">
+                        <span id="start"><i class="fas fa-play"></i> Start</span>
+                        <span id="pause"><i class="fas fa-pause"></i> Pause</span>
+                        <span id="reset"><i class="fas fa-sync-alt"></i> Reset</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="options" style="margin:0 auto;">
+                <div id="session">
+                    <i id="incrSession" class="fas fa-angle-double-up"></i>
+                    <span class="option-title">Session</span>
+                    <input id="sessionInput" type="number" value="30" max="60" min="5">
+                    <i id="decrSession" class="fas fa-angle-double-down"></i>
+                    </div>
+                    <div id="break">
+                    <i id="incrBreak" class="fas fa-angle-double-up"></i>
+                    <span class="option-title">Break</span>
+                    <input id="breakInput" type="number" value="5" max="10" min="1">
+                    <i id="decrBreak" class="fas fa-angle-double-down"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="audio-selector" style="margin:0 auto;">
+            <span id="forest" style="margin:10px" class="theme"><!--🌲 -->Forest</span>
+            <span id="ocean" style="margin:10px" class="theme"><!--🌊 -->Ocean</span>
+            <span id="rainy" style="margin:10px" class="selected theme"><!--🌧 -->Rainy</span>
+            <span id="peace" style="margin:10px" class="theme"><!--🧘 -->Peace</span>
+            <span id="cafe" style="margin:10px" class="theme"><!--☕ -->Caf&eacute;</span>
+        </div>
+        <audio loop autoplay="false" src="https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/rain.mp3">
+
+
+        <!-- END OF ADDED CODE -->
+
+      </div>
+    </div>
+  </div>
+
+    {% include "includes/footer.html" %}
+    
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+    <script>
+           $(() => {
+
+            let $audio = $("audio"), // from https://tide.moreless.io/en/
+                $theme = $(".theme"),
+                $title = $("#title"),
+                $controls = $("#controls"),
+                $options = $("#options"),
+                $minutes = $("#minutes"),
+                $seconds = $("#seconds"),
+                $start = $("#start"),
+                $pause = $("#pause"),
+                $reset = $("#reset"),
+                $incrSession = $("#incrSession"),
+                $sessionInput = $("#sessionInput"),
+                $decrSession = $("#decrSession"),
+                $incrBreak = $("#incrBreak"),
+                $breakInput = $("#breakInput"),
+                $decrBreak = $("#decrBreak"),
+                breakLength = 5 * 60,
+                breakMax = 10,
+                breakMin = 1,
+                sessionLength = 30 * 60,
+                sessionMax = 60,
+                sessionMin = 5,
+                sessionNum = 0,
+                countdown,
+                countType,
+                remainingTime = sessionLength;
+
+            init();
+
+            function init(){
+                $audio.prop("volume", 0);
+                $incrSession.click(() => incrSession());
+                $decrSession.click(() => decrSession());
+                $incrBreak.click(() => incrBreak());
+                $decrBreak.click(() => decrBreak());
+                $sessionInput.on("change", e => updateSession(e.target.value));
+                $breakInput.on("change", e => updateBreak(e.target.value));
+                $start.click(() => { if (countType === "break"){ startBreak(); } else { startSession(); } });
+                $pause.click(() => pause());
+                $reset.click(() => reset());
+                $theme.click(e => audioSelect(e));
+            }
+            function startSession(){
+                sessionNum++;
+                countType = "session";
+                $options.slideUp(143);
+                $controls.removeClass().addClass("started");
+                $title.fadeOut(43, function(){
+                $(this).html("Session " + sessionNum).fadeIn();
+                });
+                $audio.animate({volume: 1}, 1000);
+                start(remainingTime || sessionLength);
+            }
+            function startBreak(){
+                countType = "break";
+                $title.fadeOut(43, function(){
+                $(this).html("Break " + sessionNum).fadeIn();
+                });
+                $audio.animate({volume: 0}, 5000);
+                start(remainingTime || breakLength);
+            }
+            function start(timeLeft){
+                clearInterval(countdown);
+                countdown = setInterval(() => {
+                timeLeft--;
+                remainingTime = timeLeft;
+                let minLeft = Math.floor(timeLeft / 60),
+                    secLeft = timeLeft - minLeft * 60;
+                updateMinutes(minLeft);
+                updateSeconds(secLeft < 10 ? "0" + secLeft : secLeft);
+                if (timeLeft < 1){
+                    if (countType === "session"){
+                    startBreak(breakLength);
+                    } else {
+                    startSession();
+                    }
+                }
+                }, 1000);
+            }
+            function pause(){
+                sessionNum--;
+                $audio.animate({volume: 0}, 1000);
+                clearInterval(countdown);
+                $options.slideDown(143);
+                $controls.removeClass().addClass("paused");
+                $title.fadeOut(43, function(){
+                $(this).html("Paused").fadeIn();
+                });
+            }
+            function reset(){
+                clearInterval(countdown);
+                updateMinutes(sessionLength / 60);
+                updateSeconds("00");
+                countType = undefined;
+                $controls.removeClass().addClass("reset");
+                $title.html("Ready?");
+                remainingTime = sessionLength;
+            }
+            function incrSession(){
+                let num = Number($sessionInput.val());
+                num = num + (num === sessionMax ? 0 : 1);
+                sessionLength = num * 60;
+                updateSession(num);
+                updateMinutes(num);
+                updateSeconds("00");
+                reset();
+            }
+            function decrSession(){
+                let num = Number($sessionInput.val());
+                num = num - (num === sessionMin ? 0 : 1);
+                sessionLength = num * 60;
+                updateSession(num);
+                updateMinutes(num);
+                updateSeconds("00");
+                reset();
+            }
+            function incrBreak(){
+                let num = Number($breakInput.val());
+                num = num + (num === breakMax ? 0 : 1);
+                breakLength = num * 60;
+                updateBreak(num);
+                reset();
+            }
+            function decrBreak(){
+                let num = Number($breakInput.val());
+                num = num - (num === breakMin ? 0 : 1);
+                breakLength = num * 60;
+                updateBreak(num);
+                reset();
+            }
+            function updateMinutes(num){
+                $minutes.text(num);
+            }
+            function updateSeconds(num){
+                $seconds.text(num);
+            }
+            function updateSession(num){
+                num = num < sessionMin ? sessionMin : num > sessionMax ? sessionMax : num;
+                $sessionInput.val(num).blur();
+                updateMinutes(num);
+                updateSeconds("00");
+                sessionLength = num * 60;
+                reset();
+            }
+            function updateBreak(num){
+                $breakInput.val(num < breakMin ? breakMin : num > breakMax ? breakMax : num).blur();
+                breakLength = num * 60;
+                reset();
+            }
+            function audioSelect(e){
+                $theme.removeClass("selected");
+                $(e.target).addClass("selected");
+                switch(e.target.id){
+                case "forest": $audio.attr("src", "https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/forest.mp3"); break;
+                case "ocean": $audio.attr("src", "https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/ocean.mp3"); break;
+                case "rainy": $audio.attr("src", "https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/rain.mp3"); break;
+                case "peace": $audio.attr("src", "https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/peace.mp3"); break;
+                case "cafe": $audio.attr("src", "https://joeweaver.me/codepenassets/freecodecamp/challenges/build-a-pomodoro-clock/cafe.mp3"); break;
+                }
+            }
+
+            });
+    </script>
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+{% endblock javascripts %}
