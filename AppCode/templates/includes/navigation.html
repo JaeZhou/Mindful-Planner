@@ -28,26 +28,32 @@
               </a>
             </li>
           
+            <!-- Notifications on header of page -->
             <li class="nav-item dropdown px-4 pe-2 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link text-body p-0" id="notifications" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell cursor-pointer"></i>
               </a>
+
               <ul class="dropdown-menu px-2 py-3 ms-sm-n4" aria-labelledby="dropdownMenuButton">
-                <li class="mb-2">
+                <li class="mb-2" data-toggle="modal" data-target="#NotificationModal">
+
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
-                     
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New Reminder</span>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
-                        </p>
-                      </div>
+                    
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="text-sm font-weight-normal mb-1">
+                            <span class="font-weight-bold">New Reminder</span>
+                          <p class="text-xs text-secondary mb-0">
+                            <i class="fa fa-clock me-1"></i>
+                            13 minutes ago
+                          </p>
+                        </div>
+
                     </div>
                   </a>
-                </li>              
+
+                </li> 
+                             
         </div>
         <div class="ms-md-auto ps-md-3 d-flex align-items-center">
           <div class="bg-white border-radius-lg d-flex">
@@ -57,3 +63,47 @@
         </div>
     </div>
   </nav>
+
+
+<!-- NOTIFICATION MODAL -->
+<div class="modal fade" id="NotificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="WorkInvite">Do you want to work on the task?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Yes Option -> takes you to pomodoro timer -->
+        <button id="notification-accept" type="button" class="btn btn-primary"  data-dismiss="modal" style="background-color:blue">Yes</button>
+        <!-- No Option -> Closes and sends ML algo a no response -->
+        <button id="notification-deny" type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:red">No</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script type="text/javascript">
+    document.getElementById("notification-accept").onclick = function() {
+
+        <!-- Need to send data to ML algo-->
+
+        location.href="http://127.0.0.1:8000/timer/"
+    };
+</script>
+
+<script type="text/javascript">
+    document.getElementById("notification-deny").onclick = function() {
+      
+        <!-- Need to send data to ML algo-->
+    };
+</script>
+
+{% endblock javascripts %}
