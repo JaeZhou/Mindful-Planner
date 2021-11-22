@@ -23,7 +23,6 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>To-Do List</h6>
-            <!-- <a href = "{% url 'task-create' %}"><button class = "btn btn-secondary">Add Task</button></a> -->
             <a data-toggle="modal" href="#TaskCreateModal"><button class="btn btn-secondary">Add Task</button></a>
             
           </div>
@@ -46,30 +45,28 @@
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
                                                  
-                          <h6 class="mb-0 text-sm">{{task.name}}</h6>
+                          <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p class="text-xs font-weight-bold mb-0">{{task.due_date}}</p> 
+                      <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
                     </td>
                     <td>
-                      <p class="text-xs font-weight-bold mb-0">{{task.due_time}}</p> 
+                      <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
                     </td>
               
-                    <td class="align-middle">
+                    <td class="align-middle" id = "">
                       <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fa fa-ellipsis-v text-secondary"></i>
                       </a>
                       
-                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <!-- <li><a class="dropdown-item border-radius-md" href="{% url 'task-edit' task.id %}">Edit</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="{% url 'task-delete' task.id %}">Delete</a></li> -->
-                      <li><a class="dropdown-item border-radius-md" data-toggle="modal" href="#TaskEditModal">Edit</a></li>
-                      <li><a class="dropdown-item border-radius-md" data-toggle="modal" href="#TaskDeleteModal">Delete</a></li>
+                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" id="edit-delete" aria-labelledby="dropdownTable">
+                      <li><button class="edit-button dropdown-item border-radius-md" data-id = {{task.id}} data-toggle="modal" href="#TaskEditModal">Edit</button></li>
+                      <li><button class="delete-button dropdown-item border-radius-md" data-id = {{task.id}} data-toggle="modal" href="#TaskDeleteModal">Delete</button></li>
+                      
                       </ul>
                     </td>
-
                   </tr>
                 {% endfor %}
               </table>
@@ -78,7 +75,6 @@
         </div>
       </div>
     </div>
-
 
     <!--Start of Task Form Modal -->
 <div class="modal fade" id="TaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="TaskCreateModalLabel" aria-hidden="true">
@@ -122,17 +118,37 @@
 <!-- Start of Task Edit Modal -->
 <div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-header">
-      <h5 class="modal-title" id="TaskEditModalLabel">Edit {{task.name}}</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskEditModalLabel">Edit Task</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-body">
-
-    </div>
-    <div class="modal-footer">
-
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="edit-task-form">
+          <div>
+            <label for="name">Name </label>
+            <input id="edit-name" type="text" name="name" value="{{name}}" />
+          </div>
+          <div>
+            <label for="complete">Complete</label>
+          <input id="edit-complete" type="checkbox" />
+          </div>
+          <div>
+            <label for="due_date">Due Date</label>
+          <input id="edit-due_date" type="text" name="due_date" value="{{due_date}}" />
+          </div>
+          <div>
+            <label for="due_time">Due Time</label>
+          <input id="edit-due_time" type="text" name="due_time" value="{{due_time}}" />
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
+      </div>
     </div>
   </div>
 </div>
@@ -142,7 +158,7 @@
 <div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-header">
-      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete {{task.name}}</h5>
+      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -194,6 +210,55 @@
   </script>
 
   <script>
+    $(document).ready(function() {
+      $(".edit-button").click(function() {
+        var currentTds = $(this).closest("tr").find("td");
+        var cell0 = $(currentTds).eq(0).text().trim();
+        var cell1 = $(currentTds).eq(1).text().trim();
+        var cell2 = $(currentTds).eq(2).text().trim();
+        $("#edit-name").val(cell0);
+        $("#edit-due_date").val(cell1);
+        $("#edit-due_time").val(cell2);
+        $("#TaskEditModal").modal('show');
+      });
+    });
+  </script>
+
+  <script>
+    var frm2 = $("#edit-task-form");
+    $(".edit-button").click(function(e) {
+      var taskId = $(this).attr('data-id');
+
+      var editURLString = window.location.origin + "/todolist/task-edit/" + taskId + "/";
+      //var edit2 = edit.concat(taskId, "/");
+      var deleteURLString = window.location.origin + "/todolist/task-delete/" + taskId + "/";
+      //var delete2 = delete3.concat(taskId, "/");
+
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        $("#edit-task-form-submit").click(function(e) {
+          e.preventDefault();
+          $.ajax({
+            type: frm2.attr('method'),
+            // url: temp3,
+            url: editURLString,
+            data: frm2.serialize(),
+            success: function(data) {
+              console.log('Submission was successful.');
+            },
+            error: function(data) {
+              console.log('An error occurred.');
+            },
+          });
+        });
+      });
+    });
+  </script>
+
+  <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {
@@ -201,6 +266,10 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+  </script>
+
+  <script>
+    
   </script>
 
 {% endblock javascripts %}
