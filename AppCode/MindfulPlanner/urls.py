@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('allauth.urls')),
     path('customers/', include("customers.urls")),
 
     path('todolist/', include('todolist.urls')),
@@ -43,6 +44,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
     path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
     path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
+    path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'), 
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),

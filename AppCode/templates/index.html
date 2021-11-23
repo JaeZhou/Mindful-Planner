@@ -6,14 +6,34 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="{% url 'home' %}">Mindful Planner</a></li>
-    <li class="breadcrumb-item text-dark active" aria-current="page">
-      Dashboard
-    </li>
+    <li class="breadcrumb-item text-dark active" aria-current="page">Dashboard</li>
   </ol>
 </nav>
+
+<!-- <div class="container-fluid py-4">
+  <div class="row w-auto">
+    <div class="col-lg-7 mb-lg-0 mb-4">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row"> 
+            <div class="col-lg-6">
+              <div class="card-body px-0 pt-0 pb-2">
+                <body onload="startTime()">
+                  <h4 class="font-weight-bolder txt-lg">Today is {% now "N j, Y" %} </h4>
+                  <h4 class="tile=content" id="txt"></h4>
+                </body>
+              </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
 
     <div class="container-fluid py-4">
       <div class="row w-auto">
@@ -136,7 +156,7 @@
       </div> -->
 
 
-      <div class="row mt-4">
+      <!-- <div class="row mt-4"> -->
         <!-- <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
@@ -219,7 +239,7 @@
             </div>
           </div>
         </div> -->
-      </div> 
+      <!-- </div>  -->
 
      
         <!-- <div class="col-lg-5 mb-lg-0 mb-4">
@@ -428,35 +448,59 @@
           </div>
         </div>
 
-        <div class="col-lg-5 col-md-6">
-          <div class="card">
-            <div class="card-header pb-0">
-              <h4 class="font-weight-bolder txt-lg">Open Invitations</h4>
-             <div class="table-responsive">
-              
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Timeline</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Task Title</th>
-                    </tr>
-                  </thead>
-                </table> 
-              </div>
-              </div>
-            </div>
+<div class="col-lg-5 col-md-6">
+  <div class="card">
+    <div class="card-body p-3">
+      <div class="row"> 
+        <div class="col-lg-6">
+          <div class="card-body px-0 pt-0 pb-2">
+            <body onload="startTime()">
+              <h4 class="font-weight-bolder txt-lg">Today is {% now "N j, Y" %} </h4>
+              <h4 class="tile=content" id="txt"></h4>
+            </body>
           </div>
+        </div>
       </div>
-        
-
-      {% include "includes/footer.html" %}
-
     </div>
+  </div>
+</div>
+
+{% include "includes/footer.html" %}
+
 
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
+
+<script type="text/javascript">
+  function startTime() {
+      var today=new Date();
+      var h=today.getHours();
+      var m=today.getMinutes();
+      var s=today.getSeconds();
+
+      var midday="AM";
+      if (h < 12) {
+        midday = "AM"
+      }
+      if (h >= 12) {
+        midday = "PM"
+      }
+  
+      m=checkTime(m);
+      s=checkTime(s);
+      document.getElementById('txt').innerHTML= h + ":" + m + ":" + s + " " + midday;
+      t=setTimeout('startTime()',500);
+  }
+  function checkTime(i) {
+    if (i<10) {
+      i="0" + i; 
+    }
+    return i;
+  }
+  </script>
+
 
   <script src="/static/assets/js/plugins/chartjs.min.js"></script>
   <script src="/static/assets/js/plugins/Chart.extension.js"></script>

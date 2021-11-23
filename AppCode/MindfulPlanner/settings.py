@@ -48,6 +48,15 @@ INSTALLED_APPS = [
     'dailyschedule',
     'crispy_forms',
     'calendarapp',
+    'django_extensions',
+    'sass_processor',
+
+    # Google auth stuff
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -118,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Los_Angeles'
 
 USE_I18N = True
 
@@ -144,7 +153,13 @@ STATIC_ROOT = os.path.join(CORE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(CORE_DIR, 'MindfulPlanner/static/media')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
 
 # Extra places for collectstatic to find static files. 
 # Used in calling static folder inside "MindfulPlaner folder" (containing css files)
@@ -157,5 +172,27 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Google Auth Stuff
+SITE_ID = 2
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
