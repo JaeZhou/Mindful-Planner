@@ -157,17 +157,21 @@
 <!-- Start of Task Delete Modal -->
 <div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-header">
-      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskDeleteModalLabel"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-body">
-
-    </div>
-    <div class="modal-footer">
-
+      </div>
+      <div class="modal-footer">
+        <div class="modal-body">
+          <form method="POST" id="delete-task-form">
+          </form>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
+      </div>
     </div>
   </div>
 </div>
@@ -212,10 +216,10 @@
   <script>
     $(document).ready(function() {
       $(".edit-button").click(function() {
-        var currentTds = $(this).closest("tr").find("td");
-        var cell0 = $(currentTds).eq(0).text().trim();
-        var cell1 = $(currentTds).eq(1).text().trim();
-        var cell2 = $(currentTds).eq(2).text().trim();
+        var currentIds = $(this).closest("tr").find("td");
+        var cell0 = $(currentIds).eq(0).text().trim();
+        var cell1 = $(currentIds).eq(1).text().trim();
+        var cell2 = $(currentIds).eq(2).text().trim();
         $("#edit-name").val(cell0);
         $("#edit-due_date").val(cell1);
         $("#edit-due_time").val(cell2);
@@ -257,6 +261,40 @@
       });
     });
   </script>
+
+  <script>
+    var frm3 = $('#delete-task-form');    
+    $(".delete-button").click(function(e) {
+      var currentId = $(this).attr('data-id');
+      var currentObject = $(this).closest("tr").find("td");
+      var currentName = $(currentObject).eq(0).text().trim();
+      console.log(currentName);
+      document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
+      deleteString = window.location.origin + "/todolist/task-delete/" + currentId + "/";
+      console.log(deleteString);
+    
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        $("#delete-task-form-submit").click(function(e) {
+          e.preventDefault();
+          $.ajax({
+            type: frm3.attr('method'),
+            url: deleteString,
+            success: function(data) {
+              console.log('Submission was successful.');
+            },
+            error: function(data) {
+              console.log('An error occurred.');
+            },
+          });
+        });
+      });
+    });
+  </script>
+
 
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
