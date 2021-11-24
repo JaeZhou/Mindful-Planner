@@ -19,6 +19,8 @@ from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from todolist.views import ToDoList
 from MindfulPlanner import views
+import notifications.urls
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +28,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('customers/', include("customers.urls")),
     path('todolist/', include('todolist.urls')),
-
+    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
 
     # The home page
