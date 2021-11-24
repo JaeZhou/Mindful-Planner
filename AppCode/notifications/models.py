@@ -5,3 +5,6 @@ class Notification(models.Model):
     msg = models.TextField()
     time = models.DateTimeField()
     sent = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-time']
