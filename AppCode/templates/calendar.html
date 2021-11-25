@@ -2,16 +2,16 @@
 
 {% block title %} Calendar {% endblock title %}
 
-{% load static %}
-<link a href="static/assets/css/calendargrid.css"/>
-
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %} 
+  .week {
+    display: grid;
+  }
+{% endblock stylesheets %}
 
 {% block content %}
 
-
-
+<!-- Breadcrumb Code -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="{% url 'home' %}">Mindful Planner</a></li>
@@ -20,40 +20,74 @@
     </li>
   </ol>
 </nav>
+<!-- End Breadcrumb Code -->
 
-  <div class="container-fluid py-4">
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Calendar</h6>
-            <!-- <a href = "{% url 'event-create' %}">Add Event</a> -->
-            <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
+        <!-- Calendar title + Add Event Button -->
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
+        </div>
+
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+
+            <div class="week">
+              <div class="week-day">Sunday</div>
+              <div class="week-day">Monday</div>
+              <div class="week-day">Tuesday</div>
+              <div class="week-day">Wednesday</div>
+              <div class="week-day">Thursday</div>
+              <div class="week-day">Friday</div>
+              <div class="week-day">Saturday</div> 
+            </div>
+
+            <div id="app"></div>
+       
           </div>
-          <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
-                   
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- for list that'll display each task -->
-                  {% for event in events %}
-                  <tr>
-                    <td>
-                      <div class="d-flex px-2 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                                                 
-                          <h6 class="mb-0 text-sm">{{event.title}}</h6>
-                        </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <!-- <a href = "{% url 'event-create' %}">Add Event</a> --> -->
+          <!-- <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
+        </div> -->
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+                  
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- for list that'll display each task -->
+                {% for event in events %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                                                
+                        <h6 class="mb-0 text-sm">{{event.title}}</h6>
+                      </div> -->
 
 <!-- <div class="container-fluid py-4">
   <div class="row">
@@ -77,7 +111,7 @@
                 </tr>
               </thead>
               <tbody>
-                for list that'll display each task 
+                <!-- for list that'll display each task
                 {% for event in events %}
                 <tr>
                   <td>
@@ -121,16 +155,16 @@
                   
                   {% empty %}
                   <li>Nothing is happening!</li>
-
+                {% endfor %}
                 </tr>
               {% endfor %}
             </table>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <!--Start of Event Form Modal -->
+<!--Start of Event Form Modal -->
 <div class="modal fade" id="EventCreateModal" tabindex="-1" role="dialog" aria-labelledby="EventCreateModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -164,8 +198,7 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="event-form-submit">Submit</button>
   </div>
-  {% include "includes/footer.html" %}
-</div> -->
+</div>
 
 <div class="container-fluid py-4">
   <div class="row">
@@ -182,20 +215,18 @@
     </div>
   </div>
 </div>
-
 <!-- End of Event Form Modal -->
 
-    {% include "includes/footer.html" %}
-    
-  <!-- </div> -->
+<!-- {% include "includes/footer.html" %} -->
+
 
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
+<!-- ajax code -->
   <script>
-
     var frm = $('#event-form');    
     $( document ).ready(function() {
 
@@ -218,93 +249,58 @@
         });
       });
     });
+  </script>
 
-    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-// Days of the Week
-var daysOfWeek = ['S','M','T','W','TH','F','SA'];
-var gridsize = 42; //Total number of date boxes in the grid
+<!-- Calendar Code -->
+  <script>
+    document.getElementById("app").innerHTML = `
+    <!-- Parent container for the calendar month -->
+    <div class="calendar-month">
+      <!-- The calendar header -->
+      <section class="calendar-month-header">
+        <!-- Month name -->
+        <div
+          id="selected-month"
+          class="calendar-month-header-selected-month"
+        >
+          July 2020
+        </div>
 
-// Default the state to current month and year.
-var state = {
-  month: new Date().getMonth(),
-  year: new Date().getFullYear(),
-}
+        <!-- Pagination -->
+        <div class="calendar-month-header-selectors">
+          <span id="previous-month-selector"><</span>
+          <span id="present-month-selector">Today</span>
+          <span id="next-month-selector">></span>
+        </div>
+      </section>
+      
+      <!-- Calendar grid header -->
+      <ol
+        id="days-of-week"
+        class="day-of-week"
+      >
+        <li>Mon</li>
+        ...
+        <li>Sun</li>
+      </ol>
 
-// The following function builds an array of objects with dates to be displayed in the grid
-function datesForGrid(year, month) {
-  // days array holds all the days to be populated in the grid
-  var dates = [];
-  // Day on which the month starts
-  var firstDay = new Date(year, month).getDay(); 
-  // Total number of days in the month
-  var totalDaysInMonth = new Date(year, month + 1, 0).getDate();
-  // Total number of days in the previous month
-  var totalDaysInPrevMonth = new Date(year, month, 0).getDate();
-  
-  // Days from prev month to show in the grid
-  for(var i = 1; i <= firstDay; i++) {
-    var prevMonthDate = totalDaysInPrevMonth - firstDay + i;
-    var key = new Date(state.year, state.month -1, prevMonthDate).toLocaleString();    
-    dates.push({key: key, date: prevMonthDate, monthClass:'prev'});
-  }
-  // Days of the current month to show in the grid
-  var today = new Date();
-  for(var i = 1; i <= totalDaysInMonth; i++) {
-    var key = new Date(state.year, state.month, i).toLocaleString();
-    if(i === today.getDate() && state.month === today.getMonth() && state.year === today.getFullYear()) {
-      dates.push({key: key, date: i, monthClass: 'current', todayClass: 'today'})
-    } else{ 
-      dates.push({key: key, date: i, monthClass: 'current'});
-    }
-  }
-  
-  // If there is space left over in the grid, then show the dates for the next month
-  if(dates.length < gridsize) {
-    var count = gridsize - dates.length;
-    for(var i = 1; i <= count; i++) {
-      var key = new Date(state.year, state.month + 1, i).toLocaleString();
-      dates.push({key: key, date: i, monthClass:'next'});
-    }
-  }
-  return dates;
-}
-
-function render() {  
-  var calendarApp = document.querySelector('[data-app=calendar-app]');
-  // Building the calendar app HTML from the data
-  calendarApp.innerHTML = `
-      <div class="calendar-nav">
-        <button id="prev-month">Previous</button>
-        <h2>${months[state.month]} ${state.year}</h2>
-        <button id="next-month">Next</button>
-      </div>
-      <div class='calendar-grid'>
-        ${ daysOfWeek.map(day => `<div>${day}</div>` ).join('') }
-        ${ datesForGrid(state.year, state.month).map(date => `<div id="${date.key}" class="${date.monthClass} ${date.todayClass ? date.todayClass : ''}">${date.date}</div>`).join('') }
-      </div>
-  `;
-}
-
-function showCalendar(prevNextIndicator) {
-  var date = new Date(state.year, state.month + prevNextIndicator);
-  //Update the state
-  state.year = date.getFullYear();
-  state.month = date.getMonth();  
-  render();
-}
-
-// Show the current month by default
-showCalendar(0);
-
-document.addEventListener('click', function(ev) {
-  if(ev.target.id === 'prev-month') {
-    showCalendar(-1);
-  }
-  if(ev.target.id === 'next-month') {
-    showCalendar(1);
-  }
-});
-
+      <!-- Calendar grid -->
+      <ol
+        id="calendar-days"
+        class="date-grid"
+      >
+        <li class="calendar-day">
+          <span>
+            1
+          </span>
+          ...
+          <span>
+            29
+          </span>
+        </li>
+      </ol>
+    </div>
+    `;
   </script>
 
   <script>
