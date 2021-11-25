@@ -20,7 +20,6 @@ from django.views.generic.list import ListView
 from todolist.views import ToDoList
 from MindfulPlanner import views
 import notifications.urls
-from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
