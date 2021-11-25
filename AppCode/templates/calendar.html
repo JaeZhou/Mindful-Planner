@@ -37,8 +37,8 @@
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End Time</th>
                   
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
                 </tr>
@@ -76,9 +76,10 @@
                     </a>
                     
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
-                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
-                    <li><a class="dropdown-item border-radius-md" href="{% url 'event-delete' event.id %}">Delete</a></li>
+                    <!-- <li><a class="dropdown-item border-radius-md" href="">Edit</a></li> -->
+                      <li><button class="edit-button dropdown-item border-radius-md" data-id = {{event.id}} data-toggle="modal" href="#EventEditModal">Edit</button></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
+                      <li><button class="delete-button dropdown-item border-radius-md" data-id = {{event.id}} data-toggle="modal" href="#EventDeleteModal">Delete</button></li>
                     </ul>
                   </td>
                   
@@ -93,7 +94,7 @@
       </div>
     </div>
 
-    <!--Start of Event Form Modal -->
+    <!--Start of Event Create Modal -->
 <div class="modal fade" id="EventCreateModal" tabindex="-1" role="dialog" aria-labelledby="EventCreateModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -130,8 +131,11 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="event-form-submit">Submit</button>
+      </div>
+    </div>
   </div>
 </div>
+<!-- End of Event Create Modal -->
 
 <!-- Start of Event Edit Modal -->
 <div class="modal fade" id="EventEditModal" tabindex="-1" role="dialog" aria-labelledby="EventEditModalLabel" aria-hidden="true">
@@ -147,32 +151,57 @@
         <form method="POST" id="edit-event-form">
           <div>
             <label for="title">Name </label>
-            <input id="title" type="text" name="title" value="{{title}}" />
+            <input id="edit-title" type="text" name="title" value="{{title}}" />
           </div>
           <div>
             <label for="day">Date </label>
-            <input id="day" type="text" name="day" value="{{day}}" />
+            <input id="edit-day" type="text" name="day" value="{{day}}" />
           </div>
           <div>
             <label for="startTime">Start Time</label>
-          <input id="startTime" type="text" name="startTime" value="{{startTime}}" />
+          <input id="edit-startTime" type="text" name="startTime" value="{{startTime}}" />
           </div>
           <div>
             <label for="endTime">End Time</label>
-          <input id="endTime" type="text" name="endTime" value="{{endTime}}" />
-          </div> 
+          <input id="edit-endTime" type="text" name="endTime" value="{{endTime}}" />
+          </div>
+          <div>
+            <label for="description">Description</label>
+            <textarea id="edit-description" name="description"></textarea>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
+        <button type="button" class="btn btn-primary" id="edit-event-form-submit">Submit</button>
       </div>
     </div>
   </div>
 </div>
 <!-- End of Event Edit Modal -->
 
-<!-- End of Event Form Modal -->
+<!-- Start of Event Delete Modal -->
+<div class="modal fade" id="EventDeleteModal" tabindex="-1" role="dialog" aria-labelledby="EventDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EventDeleteModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-body">
+          <form method="POST" id="delete-event-form">
+          </form>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete-event-form-submit">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Event Delete Modal -->
 
 {% include "includes/footer.html" %}
     
@@ -184,7 +213,7 @@
 {% block javascripts %}
 
   <script>
-
+    //Start of event creation function
     var frm = $('#event-form');    
     $( document ).ready(function() {
 
@@ -204,6 +233,84 @@
           error: function(data) {
             console.log('An error occurred.');
           },
+        });
+      });
+    });
+    //End of event creation function
+
+    //Start of event edit function
+    $(document).ready(function() {
+      $(".edit-button").click(function() {
+        //Data fill-in
+        var currentIds = $(this).closest("tr").find("td");
+        var cell0 = $(currentIds).eq(0).text().trim();
+        var cell1 = $(currentIds).eq(1).text().trim();
+        var cell2 = $(currentIds).eq(2).text().trim();
+        var cell3 = $(currentIds).eq(3).text().trim();
+        var cell4 = $(currentIds).eq(4).text().trim();
+        $("#edit-title").val(cell0);
+        $("#edit-day").val(cell1);
+        $("#edit-startTime").val(cell2);
+        $("#edit-endTime").val(cell3);
+        $("#edit-description").val(cell4);
+        $("#EventEditModal").modal('show');
+      })
+    });
+
+    var frm2 = $('#edit-event-form');
+    $(".edit-button").click(function(e) {
+      var eventId = $(this).attr('data-id');
+      var editURLString = window.location.origin + "/calendarapp/event-edit/" + eventId + "/";
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: {"X-CSRFToken": '{{csrf_token}}'}
+        });
+
+        $("#edit-event-form-submit").click(function(e) {
+          e.preventDefault();
+          $.ajax({
+            type: frm2.attr('method'),
+            url: editURLString,
+            data: frm2.serialize(),
+            success: function(data) {
+              console.log('Submission was successful.');
+            },
+            error: function(data) {
+              console.log('An error occurred.');
+            }
+          });
+        });
+      });
+    });
+    //End of event edit function
+
+    //Start of event deletion function
+    var frm3 = $('#delete-event-form');
+    $(".delete-button").click(function(e) {
+      var currentId = $(this).attr('data-id');
+      var currentObject = $(this).closest("tr").find("td");
+      var currentName = $(currentObject).eq(0).text().trim();
+      document.getElementById("EventDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
+      deleteURLString = window.location.origin + "/calendarapp/event-delete/" + currentId + "/";
+    
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: {"X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        $("#delete-event-form-submit").click(function(e) {
+          e.preventDefault();
+
+          $.ajax({
+            type: frm3.attr('method'),
+            url: deleteURLString,
+            success: function(data) {
+              console.log('Submission was successful.');
+            },
+            error: function(data) {
+              console.log('An error occurred.');
+            }
+          })
         });
       });
     });
