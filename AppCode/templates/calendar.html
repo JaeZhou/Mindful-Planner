@@ -21,47 +21,14 @@
   </ol>
 </nav>
 
-  <div class="container-fluid py-4">
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Calendar</h6>
-            <!-- <a href = "{% url 'event-create' %}">Add Event</a> -->
-            <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
-          </div>
-          <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
-                   
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- for list that'll display each task -->
-                  {% for event in events %}
-                  <tr>
-                    <td>
-                      <div class="d-flex px-2 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                                                 
-                          <h6 class="mb-0 text-sm">{{event.title}}</h6>
-                        </div>
-
-<!-- <div class="container-fluid py-4">
+<div class="container-fluid py-4">
   <div class="row">
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
           <h6>Calendar</h6>
-          <a href = "{% url 'event-create' %}">Add Event</a>
+          <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
@@ -77,14 +44,10 @@
                 </tr>
               </thead>
               <tbody>
-                for list that'll display each task 
                 {% for event in events %}
                 <tr>
                   <td>
                     <div class="d-flex px-2 py-1">
-                      <div>
-                        <img src="/static/assets/img/team-2.jpg" class="avatar avatar-xl me-3">
-                      </div>
                       <div class="d-flex flex-column justify-content-center">
                                                 
                         <h6 class="mb-0 text-sm">{{event.title}}</h6>
@@ -92,15 +55,15 @@
                     </div>
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{event.day}}</p> 
+                    <p class="text-xs font-weight-bold mb-0">{{event.day | date:"SHORT_DATE_FORMAT"}}</p> 
                   </td>
             
                   <td class="align-middle">
-                    <p class="text-xs font-weight-bold mb-0">{{event.startTime}}</p> 
+                    <p class="text-xs font-weight-bold mb-0">{{event.startTime | time:"H:i"}}</p> 
                   </td>
 
                   <td class="align-middle">
-                    <p class="text-xs font-weight-bold mb-0">{{event.endTime}}</p> 
+                    <p class="text-xs font-weight-bold mb-0">{{event.endTime | time:"H:i"}}</p> 
                   </td>
 
                   <td class="align-middle">
@@ -157,37 +120,63 @@
           <div>
             <label for="endTime">End Time</label>
           <input id="endTime" type="text" name="endTime" value="{{endTime}}" />
-          </div> 
+          </div>
+          <div>
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="event-form-submit">Submit</button>
   </div>
-  {% include "includes/footer.html" %}
-</div> -->
+</div>
 
-<div class="container-fluid py-4">
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-header pb-0">
-          <h6>Calendar</h6>
-          <a href="{% url 'event-create' %}"><a>
-        </div>
-        <div class="card-body px-0 pt-0 pb-2">
-          <div data-app="calendar-app"></div>
-        </div>
+<!-- Start of Event Edit Modal -->
+<div class="modal fade" id="EventEditModal" tabindex="-1" role="dialog" aria-labelledby="EventEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EventEditModalLabel">Edit Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="edit-event-form">
+          <div>
+            <label for="title">Name </label>
+            <input id="title" type="text" name="title" value="{{title}}" />
+          </div>
+          <div>
+            <label for="day">Date </label>
+            <input id="day" type="text" name="day" value="{{day}}" />
+          </div>
+          <div>
+            <label for="startTime">Start Time</label>
+          <input id="startTime" type="text" name="startTime" value="{{startTime}}" />
+          </div>
+          <div>
+            <label for="endTime">End Time</label>
+          <input id="endTime" type="text" name="endTime" value="{{endTime}}" />
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
       </div>
     </div>
   </div>
 </div>
+<!-- End of Event Edit Modal -->
 
 <!-- End of Event Form Modal -->
 
-    {% include "includes/footer.html" %}
+{% include "includes/footer.html" %}
     
-  <!-- </div> -->
+  </div>
 
 {% endblock content %}
 
