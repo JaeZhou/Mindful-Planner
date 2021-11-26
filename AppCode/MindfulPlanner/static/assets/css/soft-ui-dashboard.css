@@ -8542,9 +8542,11 @@ fieldset:disabled .btn {
 }
 
 .bg-dark {
-  background-color: #252f40 !important;
+  background-color:  #b2bfc2  !important;
 }
-
+.bg-dark-header {
+  background-color:  #6f7f88  !important;
+}
 .bg-white {
   background-color: #fff !important;
 }
@@ -12813,6 +12815,13 @@ fieldset:disabled .btn {
   height: 58px !important;
   font-size: 0.875rem;
 }
+.user-avatar.large-avatar {
+  border: 2px solid #ffffff;
+  height: 10rem;
+  width: 10rem;
+  min-height: 10rem;
+  min-width: 10rem;
+}
 
 .avatar-lg.avatar-raised {
   margin-top: -29px;
@@ -12851,6 +12860,7 @@ fieldset:disabled .btn {
 .avatar-group .avatar+.avatar {
   margin-left: -1rem;
 }
+
 
 .badge.bg-primary {
   background: #cb0c9f;
@@ -19884,7 +19894,7 @@ p {
 }
 
 .bg-gray-700 {
-  background-color: #495057 !important;
+  background-color: #2d3848 !important;
 }
 
 .bg-gray-800 {

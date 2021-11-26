@@ -9,17 +9,19 @@ from django import template
 from django.contrib.auth.models import User
 
 
+
+# Loads Dashboard Page
 @login_required(login_url="/login/")
 def index(request):
     
     context = {}
     context['segment'] = 'index'
 
-    html_template = loader.get_template( 'index.html' )
+    html_template = loader.get_template( 'index.html')
     return HttpResponse(html_template.render(context, request))
 
+# Loads Landing Page
 def mainpage(request):
-    
     context = {}
     context['segment'] = 'index'
     html_template = loader.get_template( 'mainpage.html' )
