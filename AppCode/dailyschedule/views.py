@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
 
-from .forms import TaskForm
+from .forms import TaskForm, EventForm
 
 from accounts.models import User
 
@@ -42,11 +42,14 @@ def delete_task(request, id):
 
 def edit_task(request, id):
     task = get_object_or_404(Task, pk=id)
+    #print("\n", request.POST, "\n")
+
     form = TaskForm(instance=task)
     context = {'task':task, 'form':form}
 
     if task.user == request.user:
         task.name = request.POST.get('name')
+
         #task.complete = request.POST.get('complete')
 
         due_date = request.POST.get('due_date')
@@ -66,8 +69,10 @@ def edit_task(request, id):
 
 def edit_event(request, id):
     event = get_object_or_404(Event, pk=id)
-    form = TaskForm(instance=event)
+    form = EventForm(instance=event)
     context = {'event':event, 'form':form}
+    
+    #print("\n", request.POST, "\n")
 
     if event.user == request.user:
         event.title = request.POST.get('title')
