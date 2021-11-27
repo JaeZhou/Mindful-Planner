@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'customers',
     'todolist',
     'notifications',
-    'crispy_forms'
     'dailyschedule',
     'crispy_forms',
     'calendarapp',
