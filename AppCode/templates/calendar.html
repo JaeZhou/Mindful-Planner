@@ -1,0 +1,316 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Calendar {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %} 
+  .week {
+    display: grid;
+  }
+{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Breadcrumb Code -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
+    <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="{% url 'home' %}">Mindful Planner</a></li>
+    <li class="breadcrumb-item text-dark active" aria-current="page">
+     Calendar
+    </li>
+  </ol>
+</nav>
+<!-- End Breadcrumb Code -->
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+
+        <!-- Calendar title + Add Event Button -->
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
+        </div>
+
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+
+            <div class="week">
+              <div class="week-day">Sunday</div>
+              <div class="week-day">Monday</div>
+              <div class="week-day">Tuesday</div>
+              <div class="week-day">Wednesday</div>
+              <div class="week-day">Thursday</div>
+              <div class="week-day">Friday</div>
+              <div class="week-day">Saturday</div> 
+            </div>
+
+            <div id="app"></div>
+       
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <!-- <a href = "{% url 'event-create' %}">Add Event</a> --> -->
+          <!-- <a data-toggle="modal" href="#EventCreateModal"><button class="btn btn-secondary">Add Event</button></a>
+        </div> -->
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+                  
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- for list that'll display each task -->
+                {% for event in events %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                                                
+                        <h6 class="mb-0 text-sm">{{event.title}}</h6>
+                      </div> -->
+
+<!-- <div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <a href = "{% url 'event-create' %}">Add Event</a>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+                  
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- for list that'll display each task
+                {% for event in events %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div>
+                        <img src="/static/assets/img/team-2.jpg" class="avatar avatar-xl me-3">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                                                
+                        <h6 class="mb-0 text-sm">{{event.title}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{event.day}}</p> 
+                  </td>
+            
+                  <td class="align-middle">
+                    <p class="text-xs font-weight-bold mb-0">{{event.startTime}}</p> 
+                  </td>
+
+                  <td class="align-middle">
+                    <p class="text-xs font-weight-bold mb-0">{{event.endTime}}</p> 
+                  </td>
+
+                  <td class="align-middle">
+                    <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
+                  </td>
+
+                  <td class="align-middle">
+                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v text-secondary"></i>
+                    </a>
+                    
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Edit</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="{% url 'event-delete' event.id %}">Delete</a></li>
+                    </ul>
+                  </td>
+                  
+                  {% empty %}
+                  <li>Nothing is happening!</li>
+                {% endfor %}
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+<!--Start of Event Form Modal -->
+<div class="modal fade" id="EventCreateModal" tabindex="-1" role="dialog" aria-labelledby="EventCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EventCreateModalLabel">Add Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="event-form" action="{% url 'event-create' %}">
+          <div>
+            <label for="title">Name </label>
+            <input id="title" type="text" name="title" value="{{title}}" />
+          </div>
+          <div>
+            <label for="day">Date </label>
+            <input id="day" type="text" name="day" value="{{day}}" />
+          </div>
+          <div>
+            <label for="startTime">Start Time</label>
+          <input id="startTime" type="text" name="startTime" value="{{startTime}}" />
+          </div>
+          <div>
+            <label for="endTime">End Time</label>
+          <input id="endTime" type="text" name="endTime" value="{{endTime}}" />
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="event-form-submit">Submit</button>
+  </div>
+</div>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Calendar</h6>
+          <a href="{% url 'event-create' %}"><a>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div data-app="calendar-app"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Event Form Modal -->
+
+<!-- {% include "includes/footer.html" %} -->
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<!-- ajax code -->
+  <script>
+    var frm = $('#event-form');    
+    $( document ).ready(function() {
+
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+
+      $("#event-form-submit").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: frm.attr('method'),
+          url: frm.attr('action'),
+          data: frm.serialize(),
+          success: function(data) {
+            console.log('Submission was successful.');
+          },
+          error: function(data) {
+            console.log('An error occurred.');
+          },
+        });
+      });
+    });
+  </script>
+
+<!-- Calendar Code -->
+  <script>
+    document.getElementById("app").innerHTML = `
+    <!-- Parent container for the calendar month -->
+    <div class="calendar-month">
+      <!-- The calendar header -->
+      <section class="calendar-month-header">
+        <!-- Month name -->
+        <div
+          id="selected-month"
+          class="calendar-month-header-selected-month"
+        >
+          July 2020
+        </div>
+
+        <!-- Pagination -->
+        <div class="calendar-month-header-selectors">
+          <span id="previous-month-selector"><</span>
+          <span id="present-month-selector">Today</span>
+          <span id="next-month-selector">></span>
+        </div>
+      </section>
+      
+      <!-- Calendar grid header -->
+      <ol
+        id="days-of-week"
+        class="day-of-week"
+      >
+        <li>Mon</li>
+        ...
+        <li>Sun</li>
+      </ol>
+
+      <!-- Calendar grid -->
+      <ol
+        id="calendar-days"
+        class="date-grid"
+      >
+        <li class="calendar-day">
+          <span>
+            1
+          </span>
+          ...
+          <span>
+            29
+          </span>
+        </li>
+      </ol>
+    </div>
+    `;
+  </script>
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+{% endblock javascripts %}

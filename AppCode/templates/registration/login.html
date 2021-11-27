@@ -1,5 +1,6 @@
 {% extends 'layouts/base-fullscreen.html' %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 
 {% block title %} Sign In {% endblock title %}
 
@@ -29,8 +30,45 @@
               <div class="card-footer text-center pt-0 px-lg-2 px-1">
                 <p class="mb-4 text-sm mx-auto">
                   Don't have an account?
-                  <a href="/sign-up.html" class="text-info text-gradient font-weight-bold">Sign Up</a>
+                  <br> <a href="{% url 'register' %}" class="text-info text-gradient font-weight-bold">Sign Up</a>
+                  <br> <br> <a href="{% provider_login_url 'google' %}" class="text-info text-gradient font-weight-bold">Login With Google</a>
+
+
+                  
+                  <!-- Will be used later once we are not using a local host-->
+                  <!--
+                  <head>
+                            <meta name="google-signin-client_id" content="261482207380-nq57kroddqqmj0ahddc87vutv01djalm.apps.googleusercontent.com">
+                          </head>
+                          <body>
+                            <div id="my-signin2"></div>
+                            <script>
+                              function onSuccess(googleUser) {
+                                console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                              }
+                              function onFailure(error) {
+                                console.log(error);
+                              }
+                              function renderButton() {
+                                gapi.signin2.render('my-signin2', {
+                                  'scope': 'profile email',
+                                  'width': 240,
+                                  'height': 50,
+                                  'longtitle': true,
+                                  'theme': 'dark',
+                                  'onsuccess': onSuccess,
+                                  'onfailure': onFailure
+                                });
+                              }
+                            </script>
+
+                            <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+                          </body>-->
                 </p>
+                <p class="mb-4 text-sm mx-auto">
+                  
+                </p>
+
               </div>
             </div>
           </div>
