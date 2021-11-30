@@ -22,6 +22,7 @@ from django.views.generic.list import ListView
 from django.conf.urls.static import static
 from todolist.views import ToDoList
 from MindfulPlanner import views
+import notifications.urls
 from calendarapp.views import Calendar
 
 urlpatterns = [
@@ -30,6 +31,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('customers/', include("customers.urls")),
+    path('todolist/', include('todolist.urls')),
+    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
     path('todolist/', include('todolist.urls')),
     path('dailyschedule/', include('dailyschedule.urls')),
