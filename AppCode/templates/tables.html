@@ -42,18 +42,25 @@
                   {% for task in tasks %}
                   <tr>
                     <td>
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <!-- <a class="table-row1" href = "{% url 'subtasks' task.id %}"> -->
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
                                                  
                           <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
                         </div>
                       </div>
+                      </a>
                     </td>
                     <td>
-                      <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+                      </a>
                     </td>
                     <td>
-                      <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+                      </a>
                     </td>
               
                     <td class="align-middle" id = "">
@@ -76,7 +83,7 @@
       </div>
     </div>
 
-    <!--Start of Task Form Modal -->
+    <!--Start of Task Create Modal -->
 <div class="modal fade" id="TaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="TaskCreateModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -113,7 +120,7 @@
     </div>
   </div>
 </div>
-<!-- End of Task Form Modal -->
+<!-- End of Task Create Modal -->
 
 <!-- Start of Task Edit Modal -->
 <div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
@@ -157,21 +164,82 @@
 <!-- Start of Task Delete Modal -->
 <div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-header">
-      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskDeleteModalLabel"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-body">
-
-    </div>
-    <div class="modal-footer">
-
+      </div>
+      <div class="modal-footer">
+        <div class="modal-body">
+          <form method="POST" id="delete-task-form">
+          </form>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
+      </div>
     </div>
   </div>
 </div>
 <!-- End of Task Delete Modal -->
+
+<!-- Start of Subtask View Modal -->
+<div class="modal fade" id="SubtaskViewModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskViewModalLabel">Subtasks</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-view-modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask View Modal -->
+
+<!-- Start of Subtask Create Modal -->
+<div class="modal fade" id="SubtaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskCreateModalLabel">Add Subtask</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-create-modal-body">
+        <!-- <form method="POST" id="subtask-create-form">
+          <div>
+            <label for="name">Name </label>
+            <input id="subtask-name" type="text" name="subtask-name" value="{{name}}" />
+          </div>
+        </form> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask Create Modal -->
+
+<!-- Start of Subtask Edit Modal -->
+
+<!-- End of Subtask Edit Modal-->
+
+<!-- Start of Subtask Delete Modal -->
+
+<!-- End of SUbtask Delete Modal -->
    
 
     {% include "includes/footer.html" %}
@@ -184,6 +252,9 @@
 {% block javascripts %}
 
   <script>
+    var pageCurrentId;
+    var pageCurrentTask;
+
     var frm = $('#task-form');    
     $( document ).ready(function() {
 
@@ -207,24 +278,19 @@
       });
     });
 
-  </script>
-
-  <script>
     $(document).ready(function() {
       $(".edit-button").click(function() {
-        var currentTds = $(this).closest("tr").find("td");
-        var cell0 = $(currentTds).eq(0).text().trim();
-        var cell1 = $(currentTds).eq(1).text().trim();
-        var cell2 = $(currentTds).eq(2).text().trim();
+        var currentIds = $(this).closest("tr").find("td");
+        var cell0 = $(currentIds).eq(0).text().trim();
+        var cell1 = $(currentIds).eq(1).text().trim();
+        var cell2 = $(currentIds).eq(2).text().trim();
         $("#edit-name").val(cell0);
         $("#edit-due_date").val(cell1);
         $("#edit-due_time").val(cell2);
         $("#TaskEditModal").modal('show');
       });
     });
-  </script>
 
-  <script>
     var frm2 = $("#edit-task-form");
     $(".edit-button").click(function(e) {
       var taskId = $(this).attr('data-id');
@@ -256,9 +322,38 @@
         });
       });
     });
-  </script>
 
-  <script>
+    var frm3 = $('#delete-task-form');    
+    $(".delete-button").click(function(e) {
+      var currentId = $(this).attr('data-id');
+      var currentObject = $(this).closest("tr").find("td");
+      var currentName = $(currentObject).eq(0).text().trim();
+      console.log(currentName);
+      document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
+      deleteString = window.location.origin + "/todolist/task-delete/" + currentId + "/";
+      console.log(deleteString);
+    
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        $("#delete-task-form-submit").click(function(e) {
+          e.preventDefault();
+          $.ajax({
+            type: frm3.attr('method'),
+            url: deleteString,
+            success: function(data) {
+              console.log('Submission was successful.');
+            },
+            error: function(data) {
+              console.log('An error occurred.');
+            },
+          });
+        });
+      });
+    });
+
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {
@@ -266,10 +361,52 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>
 
-  <script>
-    
+    $(".table-row").click(function(e) {
+      pageCurrentId = $(this).data('id');
+      var currentObj = $(this).closest("tr").find("td");
+      pageCurrentTask = $(currentObj).eq(0).text().trim();
+      var urlString = window.location.origin + "/todolist/subtasks/" + pageCurrentId;
+      console.log(urlString);
+      $('.subtask-view-modal-body').load(urlString);
+    })
+
+    $("#add-subtask-button").click(function(e) {
+      var subtaskCreateString = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
+      //var otherString = window.location.origin + "/subtask_form.html";
+      console.log(subtaskCreateString);
+      $(".close-button").click();
+      $(".subtask-create-modal-body").load(subtaskCreateString);
+      $("#SubtaskCreateModal").modal("show");
+    });
+
+    $("#subtask-form-submit").click(function(e) {
+      var createSubtaskURLString = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
+      var frm4 = $("#subtask-create-form");
+      var formData = {
+        task: frm4.serialize(),
+        name: $("#subtask-name").val(),
+      }
+      console.log(frm4.serialize());
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        e.preventDefault();
+        $.ajax({
+          type: frm4.attr('method'),
+          url: createSubtaskURLString,
+          data: frm4.serialize(),
+          success: function(data) {
+            console.log('Submission was successful.');
+          },
+          error: function(data) {
+            console.log('An error occurred.');
+          },
+        });
+      });
+    });
   </script>
 
 {% endblock javascripts %}

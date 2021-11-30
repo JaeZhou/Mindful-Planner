@@ -6,6 +6,8 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Task, Subtask
+from .forms import SubtaskForm
+from django import forms
 
 #List view for the to do list
 class ToDoList(ListView):
@@ -58,21 +60,21 @@ def orderTasks(request):
 
     return render(request, 'tables', context)
 
-class SubtaskList(ListView):
-    model = Subtask
-    context_object_name = 'subtasks'
+def subtask_view(request, id):
+    t = Task.objects.get(id=id)
+    subtasks = t.subtask_set.all()
+    return render(request, 'subtasks.html', {'subtasks': subtasks})
 
 #Task creating view in task_form.html
 class SubtaskCreate(CreateView):
-    model = Subtask
     template_name = 'subtask_form.html'
-    #No user field needed
-    fields = ['name', 'complete']
+    form_class = SubtaskForm
     success_url = reverse_lazy('tables')
-    #Validates that user form is valid
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(SubtaskCreate, self).form_valid(form)
+
+    def get_initial(self):
+        initial=super(SubtaskCreate, self).get_initial()
+        initial['task'] = Task.objects.get(pk=self.kwargs['pk'])
+        return initial
 
 #Task editing view in task_form.html
 class SubtaskEdit(UpdateView):
