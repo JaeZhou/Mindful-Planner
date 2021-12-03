@@ -6,11 +6,10 @@
         <tr>
           <td style="text-align: right; width: 100px;">
                 {% if subtask.complete %}
-                     <input type="checkbox" name="checkbox" checked onclick='assignCheckToDatabase(this, "{{subtask.id}}", "{{subtask.task}}", "{{subtask.name}}",  "{{subtask.complete}}")'>
-                {% else %}
-                <input type="checkbox" name="checkbox" onclick='assignCheckToDatabase(this, "{{subtask.id}}", "{{subtask.task}}", "{{subtask.name}}",  "{{subtask.complete}}")'>
-                {% endif %}                       
-                <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
+                     <input class="subtask-checkbox" type="checkbox" name="checkbox" data-id="{{subtask.id}}" checked>
+                     {% else %}
+                    <input class="subtask-checkbox" type="checkbox" name="checkbox" data-id="{{subtask.id}}">
+                    {% endif %}                       
             </div>
             </a>
           </td>
@@ -27,32 +26,28 @@
       {% endif %}
     </table>
   </div>
+  {% block javascripts %}
 
-  <script >
-    function assignCheckToDatabase(e, assignmentId, assignmentTask, assignmentName, assignmentComplete) {
-      taskId = getCurrentId();
-      checkboxUrl= window.location.origin + "/todolist/subtask-edit/" + taskId + "/";
-      console.log(checkboxUrl);
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $.ajax({
-          type: "POST",
-          url: checkboxUrl,
-          data: {
-            task: assignmentTask,
-            name: assignmentName,
-            complete: !assignmentComplete,
-          },
-          success: function(data) {
-            console.log('Submission was successful.');
-          },
-          error: function(data) {
-            console.log('An error occurred.');
-          },
-        });
+  <script>
+    $(".subtask-checkbox").click(function(e) {
+      var subtaskId = $(this).attr('data-id');
+      var editSubtaskURL = window.location.origin + "/todolist/subtask-edit/" + subtaskId + "/";
+    
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
       });
-    };
+
+      $.ajax({
+        type: "POST",
+        url: editSubtaskURL,
+        success: function(data) {
+          console.log("Submission successful.");
+        },
+        error: function(data) {
+          console.log("An error occurred.");
+        },
+      });
+  });
   </script>
+
+{% endblock javascripts %}

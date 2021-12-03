@@ -47,7 +47,7 @@ $(document).ready(function() {
       });
       $(".task-create-close-button").click();
     });
-  })
+  });
 
   $(".edit-button").click(function(e) {
     var taskId = $(this).attr('data-id');
@@ -95,14 +95,14 @@ $(document).ready(function() {
         url: taskDeleteURLString,
         beforeSend: function(xhr) {
           xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-      },
+        },
         success: function(data) {
           console.log("Submission was successful");
         },
         error: function(data) {
           console.log("An error occurred");
         },
-      })
+      });
     });
   });
 
@@ -114,7 +114,7 @@ $(document).ready(function() {
     console.log(subtaskViewURL);
     $('.subtask-view-modal-body').load(subtaskViewURL);
     $("SubtaskViewModal").modal("toggle");
-  })
+  });
 
   $("#add-subtask-button").click(function(e) {
     var createSubtaskURL = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
@@ -142,4 +142,6 @@ $(document).ready(function() {
       $("#SubtaskViewModal").modal("show");
     });
   });
+
+  
 });

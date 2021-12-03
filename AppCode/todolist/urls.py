@@ -12,7 +12,6 @@ urlpatterns = [
     path('task-edit/<int:pk>/', TaskEdit.as_view(), name='task-edit'),
     path('task-delete/<int:pk>/', TaskDelete.as_view(), name='task-delete'),
     path('subtasks/<id>', views.subtask_view, name='subtasks'),
-    # path('subtasks/<int:pk>/', SubtaskList.as_view(), name='subtasks'),
     path('subtask-create/<int:pk>/', SubtaskCreate.as_view(), name='subtask-create'),
     path('subtask-edit/<int:pk>/', SubtaskEdit.as_view(), name='subtask-edit'),
     path('subtask-delete/<int:pk>/', SubtaskDelete.as_view(), name='subtask-delete'),
