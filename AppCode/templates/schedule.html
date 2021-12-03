@@ -37,8 +37,6 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Event Date</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
                     </tr>
                   </thead>
 
@@ -186,10 +184,6 @@
                     <input id="edit-name" type="text" name="name" value="{{name}}" />
                   </div>
                   <div>
-                    <label for="complete">Complete</label>
-                  <input id="edit-complete" type="checkbox" />
-                  </div>
-                  <div>
                     <label for="due_date">Due Date</label>
                   <input id="edit-due_date" type="text" name="due_date" value="{{due_date | date:"SHORT_DATE_FORMAT"}}" />
                   </div>
@@ -197,6 +191,10 @@
                     <label for="due_time">Due Time</label>
                   <input id="edit-due_time" type="text" name="due_time" value="{{due_time | time:"H:i"}}" />
                   </div> 
+                  <div>
+                    <label for="complete">Complete</label>
+                  <input id="edit-complete" type="checkbox" />
+                  </div>
                 </form>
               </div>
               <div class="modal-footer">
@@ -349,34 +347,32 @@
   <script>
       var frm2 = $("#edit-task-form");
       $(".edit-button").click(function(e) {
-      var taskId = $(this).attr('data-id');
+        var taskId = $(this).attr('data-id');
 
-      var editURLString = window.location.origin + "/dailyschedule/task-edit/" + taskId + "/";
-      //var edit2 = edit.concat(taskId, "/");
-      var deleteURLString = window.location.origin + "/dailyschedule/task-delete/" + taskId + "/";
-      //var delete2 = delete3.concat(taskId, "/");
+        var editURLString = window.location.origin + "/dailyschedule/task-edit/" + taskId + "/";
+        var deleteURLString = window.location.origin + "/dailyschedule/task-delete/" + taskId + "/";
 
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
+        $(document).ready(function() {
+          $.ajaxSetup({
+            headers: { "X-CSRFToken": '{{csrf_token}}' }
+          });
 
-        $("#edit-task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm2.attr('method'),
-            // url: temp3,
-            url: editURLString,
-            data: frm2.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
+          $("#edit-task-form-submit").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+              type: frm2.attr('method'),
+              // url: temp3,
+              url: editURLString,
+              data: frm2.serialize(),
+              success: function(data) {
+                console.log('Submission was successful.');
+              },
+              error: function(data) {
+                console.log('An error occurred.');
+              },
+            });
           });
         });
-      });
       });
   </script>
 
@@ -416,19 +412,19 @@
 
   <!-- START OF EVENT SCRIPTS -->
   <script>
-      var frm = $('#event-form');    
+      var eventfrm = $('#event-form');    
       $( document ).ready(function() {
 
         $.ajaxSetup({
           headers: { "X-CSRFToken": '{{csrf_token}}' }
         });
 
-        $("#task-form-submit").click(function(e) {
+        $("#event-form-submit").click(function(e) {
           e.preventDefault();
           $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
+            type: eventfrm.attr('method'),
+            url: eventfrm.attr('action'),
+            data: eventfrm.serialize(),
             success: function(data) {
               console.log('Submission was successful.');
             },
@@ -461,7 +457,7 @@
   </script>
 
   <script>
-      var frm2 = $("#edit-event-form");
+      var eventfrm2 = $("#edit-event-form");
       $(".edit-button-event").click(function(e) {
       var eventId = $(this).attr('data-id');
 
@@ -478,10 +474,10 @@
         $("#edit-event-form-submit").click(function(e) {
           e.preventDefault();
           $.ajax({
-            type: frm2.attr('method'),
+            type: eventfrm2.attr('method'),
             // url: temp3,
             url: editURLString,
-            data: frm2.serialize(),
+            data: eventfrm2.serialize(),
             success: function(data) {
               console.log('Submission was successful.');
             },
@@ -495,7 +491,7 @@
   </script>
 
   <script>
-    var frm3 = $('#delete-event-form');    
+    var eventfrm3 = $('#delete-event-form');    
     $(".delete-button-event").click(function(e) {
       var currentId = $(this).attr('data-id');
       var currentObject = $(this).closest("tr").find("td");
@@ -511,7 +507,7 @@
         $("#delete-event-form-submit").click(function(e) {
           e.preventDefault();
           $.ajax({
-            type: frm3.attr('method'),
+            type: eventfrm3.attr('method'),
             url: deleteString,
             success: function(data) {
               console.log('Submission was successful.');

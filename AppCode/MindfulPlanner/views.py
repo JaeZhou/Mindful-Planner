@@ -7,6 +7,8 @@ from django.template import loader
 from django.http import HttpResponse
 from django import template
 from django.contrib.auth.models import User
+from todolist.models import Task
+from calendarapp.models import Event
 
 
 
@@ -16,6 +18,16 @@ def index(request):
     
     context = {}
     context['segment'] = 'index'
+
+    # Generate the task list and event list
+    task_list = Task.objects.filter(user=request.user)
+    event_list = Event.objects.filter(user=request.user)
+    context['tasks'] = task_list
+    context['events'] = event_list
+
+    graph = [50, 40, 300, 220, 500, 250, 400, 230, 500]
+    context['data_set'] = graph
+    
 
     html_template = loader.get_template( 'index.html')
     return HttpResponse(html_template.render(context, request))

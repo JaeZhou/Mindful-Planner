@@ -80,7 +80,6 @@
         <button id="notification-accept" type="button" class="btn btn-primary"  data-dismiss="modal" style="background-color:blue">Yes</button>
         <!-- No Option -> Closes and sends ML algo a no response -->
         <button id="notification-deny" type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:red">No</button>
-        
       </div>
     </div>
   </div>
@@ -94,6 +93,7 @@
     document.getElementById("notification-accept").onclick = function() {
 
         <!-- Need to send data to ML algo-->
+        <!-- DATETIME AND BOOLEAN OF YES OR NO NEED TO BE UPDATED ON THE CSV -->
 
         location.href="http://127.0.0.1:8000/timer/"
     };
