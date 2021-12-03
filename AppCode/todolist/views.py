@@ -88,3 +88,9 @@ class SubtaskDelete(DeleteView):
     template_name = 'subtask_delete.html'
     context_object_name = 'subtask'
     success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        st = Subtask.objects.get(pk = self.kwargs['pk'])
+        st.remove()
+        context = super(SubtaskEdit, self).get_context_data(**kwargs)
+        return context    

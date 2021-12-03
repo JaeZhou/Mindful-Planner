@@ -17,7 +17,7 @@
               <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{subtask.name}}</p> 
           </td>    
           <td class="float: right;" id = "">
-            <i class="fa fa-close text-secondary"></i>
+            <i style="cursor:pointer;" class="delete-subtask fa fa-close text-secondary" data-id="{{subtask.id}}"></i>
           </td>
         </tr>
       {% endfor %}
@@ -47,7 +47,26 @@
           console.log("An error occurred.");
         },
       });
-  });
+    });
+
+    $(".delete-subtask").click(function(e) {
+      var deleteId = $(this).attr('data-id');
+      var deleteSubtaskURL = window.location.origin + "/todolist/subtask-delete/" + deleteId + "/";
+      console.log(deleteSubtaskURL);
+      $.ajax({
+        type: "POST",
+        url: deleteSubtaskURL,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+        },
+        success: function(data) {
+          console.log("Submission successful.");
+        },
+        error: function(data) {
+          console.log("An error occurred.");
+        },
+      });
+    });
   </script>
 
 {% endblock javascripts %}
