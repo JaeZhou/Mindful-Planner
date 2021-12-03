@@ -1,0 +1,20 @@
+<!--task creating/editing form-->
+<form method="POST" id="task-create-form">
+    {%csrf_token%}
+    <div>
+        <label for="name">Name </label>
+        <input id="name" type="text" name="name" value="{{name}}" />
+      </div>
+      <div>
+        <label for="complete">Complete</label>
+      <input id="complete" type="checkbox" />
+      </div>
+      <div>
+        <label for="due_date">Due Date</label>
+      <input id="due_date" type="text" name="due_date" value="{{due_date}}" />
+      </div>
+      <div>
+        <label for="due_time">Due Time</label>
+      <input id="due_time" type="text" name="due_time" value="{{due_time}}" />
+      </div> 
+</form>

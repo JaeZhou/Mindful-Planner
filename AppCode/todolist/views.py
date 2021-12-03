@@ -6,13 +6,13 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Task, Subtask
-from .forms import SubtaskForm
+from .forms import TaskForm, SubtaskForm
 from django import forms
 
 #List view for the to do list
 class ToDoList(ListView):
     model = Task
-    template_name = 'tables.html'
+    template_name = 'todolist.html'
     
     def get_queryset(self):
         tasks = self.model.objects.filter(user=self.request.user)
@@ -27,28 +27,38 @@ class ToDoList(ListView):
 class TaskCreate(CreateView):
     model = Task
     template_name = 'task_form.html'
-    #No user field needed
-    fields = ['name', 'complete', 'due_date', 'due_time']
-    success_url = reverse_lazy('tables')
+    form_class = TaskForm
+    success_url = reverse_lazy('todolist')
     #Validates that user form is valid
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(TaskCreate, self).form_valid(form)
 
-#Task editing view in task_form.html
 class TaskEdit(UpdateView):
     model = Task
     template_name = 'task_form.html'
-    #No user field needed
-    fields = ['name', 'complete', 'due_date', 'due_time']
-    success_url = reverse_lazy('tables')
+    form_class = TaskForm
+    success_url = reverse_lazy('todolist')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        print(self)
+        return super(TaskEdit, self).form_valid(form)
 
 #Task deleting view in task_form.html
 class TaskDelete(DeleteView):
     model = Task
     template_name = 'task_delete.html'
-    context_object_name = 'task'
-    success_url = reverse_lazy('tables')
+    # context_object_name = 'task'
+    success_url = reverse_lazy('todolist')
+
+# class TaskDelete(DeleteView):
+#     template_name = 'task_delete.html'
+#     success_url = reverse_lazy('todolist')
+
+#     def get_object(self):
+#         id_ = self.kwargs.get("id")
+#         return get_object_or_404(Task, id=id_)
 
 def orderTasks(request):
     #get all tasks
@@ -58,7 +68,7 @@ def orderTasks(request):
 
     context = {'allsortedTasks': sortedTasks}
 
-    return render(request, 'tables', context)
+    return render(request, 'todolist', context)
 
 def subtask_view(request, id):
     t = Task.objects.get(id=id)
@@ -69,7 +79,7 @@ def subtask_view(request, id):
 class SubtaskCreate(CreateView):
     template_name = 'subtask_form.html'
     form_class = SubtaskForm
-    success_url = reverse_lazy('tables')
+    success_url = reverse_lazy('todolist')
 
     def get_initial(self):
         initial=super(SubtaskCreate, self).get_initial()
@@ -79,14 +89,14 @@ class SubtaskCreate(CreateView):
 #Task editing view in task_form.html
 class SubtaskEdit(UpdateView):
     model = Subtask
+    form_class = SubtaskForm
     template_name = 'subtask_form.html'
     #No user field needed
-    fields = ['name', 'complete']
-    success_url = reverse_lazy('tables')
+    success_url = reverse_lazy('todolist')
 
 #Task deleting view in task_form.html
 class SubtaskDelete(DeleteView):
     model = Subtask
     template_name = 'subtask_delete.html'
     context_object_name = 'subtask'
-    success_url = reverse_lazy('tables')
+    success_url = reverse_lazy('todolist')
