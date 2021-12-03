@@ -1,10 +1,17 @@
 {% extends 'base-fullscreen.html' %}
 
 {% block content %}
-<div  class="d-flex justify-content-xl-center pt-12" >
 
-    <p>
-        {% load static %} <img src="static/assets/img/background-image.jpg" class=" avatar avatar-xxl">
-    </p>
-</div>
+{% load static %}
+<style>
+
+    html {
+        background: url(static/assets/img/background-image.jpg) no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+    
+</style>
+
 {% endblock %}

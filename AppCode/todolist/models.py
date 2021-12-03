@@ -22,7 +22,7 @@ class Task(models.Model):
         return self.name
 
 class Subtask(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     complete = models.BooleanField(default=False)
 

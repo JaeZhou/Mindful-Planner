@@ -1,14 +1,18 @@
 # to-do-list/urls.py
 from django.urls import path
-from .views import ToDoList, TaskCreate, TaskEdit, TaskDelete, SubtaskList, SubtaskCreate, SubtaskEdit, SubtaskDelete
+from .views import ToDoList, TaskCreate, TaskEdit, TaskDelete, SubtaskCreate, SubtaskEdit, SubtaskDelete
 from django.views.generic.base import TemplateView
+from . import views
+
 
 
 urlpatterns = [
+    path('', ToDoList.as_view(template_name='todolist.html'), name='todolist'),
     path('task-create/', TaskCreate.as_view(), name='task-create'),
     path('task-edit/<int:pk>/', TaskEdit.as_view(), name='task-edit'),
     path('task-delete/<int:pk>/', TaskDelete.as_view(), name='task-delete'),
-    path('subtask-create/', SubtaskCreate.as_view(), name='subtask-create'),
+    path('subtasks/<id>', views.subtask_view, name='subtasks'),
+    path('subtask-create/<int:pk>/', SubtaskCreate.as_view(), name='subtask-create'),
     path('subtask-edit/<int:pk>/', SubtaskEdit.as_view(), name='subtask-edit'),
     path('subtask-delete/<int:pk>/', SubtaskDelete.as_view(), name='subtask-delete'),
 ]

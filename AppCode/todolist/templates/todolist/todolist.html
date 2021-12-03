@@ -7,6 +7,7 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
+{% load static %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="/dashboard/">Mindful Planner</a></li>
@@ -23,7 +24,7 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>To-Do List</h6>
-            <a data-toggle="modal" href="#TaskCreateModal"><button class="btn btn-secondary">Add Task</button></a>
+            <a data-toggle="modal" href="#TaskCreateModal"><button class="add-task-button btn btn-secondary">Add Task</button></a>
             
           </div>
             <div class="table-responsive p-0">
@@ -42,18 +43,26 @@
                   {% for task in tasks %}
                   <tr>
                     <td>
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <!-- <a class="table-row" data-id = {{task.id}} data-toggle="modal" href=""></a> -->
+                        <!-- <a class="table-row1" href = "{% url 'subtasks' task.id %}"> -->
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
                                                  
                           <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
                         </div>
                       </div>
+                      </a>
                     </td>
                     <td>
-                      <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+                      </a>
                     </td>
                     <td>
-                      <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+                      </a>
                     </td>
               
                     <td class="align-middle" id = "">
@@ -76,7 +85,7 @@
       </div>
     </div>
 
-    <!--Start of Task Form Modal -->
+    <!--Start of Task Create Modal -->
 <div class="modal fade" id="TaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="TaskCreateModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -86,34 +95,16 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="POST" id="task-form" action="{% url 'task-create' %}">
-          <div>
-            <label for="name">Name </label>
-            <input id="name" type="text" name="name" value="{{name}}" />
-          </div>
-          <div>
-            <label for="complete">Complete</label>
-          <input id="complete" type="checkbox" />
-          </div>
-          <div>
-            <label for="due_date">Due Date</label>
-          <input id="due_date" type="text" name="due_date" value="{{due_date}}" />
-          </div>
-          <div>
-            <label for="due_time">Due Time</label>
-          <input id="due_time" type="text" name="due_time" value="{{due_time}}" />
-          </div> 
-        </form>
+      <div class="task-create-modal-body">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="task-create-close-button btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="task-form-submit">Submit</button>
       </div>
     </div>
   </div>
 </div>
-<!-- End of Task Form Modal -->
+<!-- End of Task Create Modal -->
 
 <!-- Start of Task Edit Modal -->
 <div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
@@ -125,15 +116,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="POST" id="edit-task-form">
+      <div class="task-edit-modal-body">
+        <form method="POST" id="task-edit-form">
+          {% csrf_token %}
           <div>
             <label for="name">Name </label>
             <input id="edit-name" type="text" name="name" value="{{name}}" />
-          </div>
-          <div>
-            <label for="complete">Complete</label>
-          <input id="edit-complete" type="checkbox" />
           </div>
           <div>
             <label for="due_date">Due Date</label>
@@ -157,21 +145,73 @@
 <!-- Start of Task Delete Modal -->
 <div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-header">
-      <h5 class="modal-title" id="TaskDeleteModalLabel">Delete</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskDeleteModalLabel"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-body">
-
-    </div>
-    <div class="modal-footer">
-
+      </div>
+      <div class="modal-footer">
+        <div class="task-delete-modal-body">
+          <form method="POST" id="delete-task-form">
+            {% csrf_token %}
+          </form>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
+      </div>
     </div>
   </div>
 </div>
 <!-- End of Task Delete Modal -->
+
+<!-- Start of Subtask View Modal -->
+<div class="modal fade" id="SubtaskViewModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskViewModalLabel">Subtasks</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-view-modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask View Modal -->
+
+<!-- Start of Subtask Create Modal -->
+<div class="modal fade" id="SubtaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskCreateModalLabel">Add Subtask</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-create-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask Create Modal -->
+
+<!-- Start of Subtask Delete Modal -->
+
+<!-- End of SUbtask Delete Modal -->
    
 
     {% include "includes/footer.html" %}
@@ -183,81 +223,7 @@
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
-  <script>
-    var frm = $('#task-form');    
-    $( document ).ready(function() {
-
-      $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{csrf_token}}' }
-      });
-
-      $("#task-form-submit").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-          type: frm.attr('method'),
-          url: frm.attr('action'),
-          data: frm.serialize(),
-          success: function(data) {
-            console.log('Submission was successful.');
-          },
-          error: function(data) {
-            console.log('An error occurred.');
-          },
-        });
-      });
-    });
-
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      $(".edit-button").click(function() {
-        var currentTds = $(this).closest("tr").find("td");
-        var cell0 = $(currentTds).eq(0).text().trim();
-        var cell1 = $(currentTds).eq(1).text().trim();
-        var cell2 = $(currentTds).eq(2).text().trim();
-        $("#edit-name").val(cell0);
-        $("#edit-due_date").val(cell1);
-        $("#edit-due_time").val(cell2);
-        $("#TaskEditModal").modal('show');
-      });
-    });
-  </script>
-
-  <script>
-    var frm2 = $("#edit-task-form");
-    $(".edit-button").click(function(e) {
-      var taskId = $(this).attr('data-id');
-
-      var editURLString = window.location.origin + "/todolist/task-edit/" + taskId + "/";
-      //var edit2 = edit.concat(taskId, "/");
-      var deleteURLString = window.location.origin + "/todolist/task-delete/" + taskId + "/";
-      //var delete2 = delete3.concat(taskId, "/");
-
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#edit-task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm2.attr('method'),
-            // url: temp3,
-            url: editURLString,
-            data: frm2.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-    });
-  </script>
-
+  <script src="../../static/todolist/js/todolist.js"></script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -266,10 +232,6 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>
-
-  <script>
-    
   </script>
 
 {% endblock javascripts %}
