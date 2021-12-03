@@ -7,6 +7,7 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
+{% load static %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
     <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="index.html">Mindful Planner</a></li>
@@ -23,7 +24,7 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>To-Do List</h6>
-            <a data-toggle="modal" href="#TaskCreateModal"><button class="btn btn-secondary">Add Task</button></a>
+            <a data-toggle="modal" href="#TaskCreateModal"><button class="add-task-button btn btn-secondary">Add Task</button></a>
             
           </div>
             <div class="table-responsive p-0">
@@ -43,6 +44,7 @@
                   <tr>
                     <td>
                       <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <!-- <a class="table-row" data-id = {{task.id}} data-toggle="modal" href=""></a> -->
                         <!-- <a class="table-row1" href = "{% url 'subtasks' task.id %}"> -->
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
@@ -93,8 +95,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="POST" id="task-form" action="{% url 'task-create' %}">
+      <div class="task-create-modal-body">
+        <!-- <form method="POST" id="task-form" action="{% url 'task-create' %}">
           <div>
             <label for="name">Name </label>
             <input id="name" type="text" name="name" value="{{name}}" />
@@ -111,10 +113,10 @@
             <label for="due_time">Due Time</label>
           <input id="due_time" type="text" name="due_time" value="{{due_time}}" />
           </div> 
-        </form>
+        </form> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="task-create-close-button btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="task-form-submit">Submit</button>
       </div>
     </div>
@@ -132,8 +134,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="POST" id="edit-task-form">
+      <div class="task-edit-modal-body">
+        <form method="POST" id="task-edit-form">
+          {% csrf_token %}
           <div>
             <label for="name">Name </label>
             <input id="edit-name" type="text" name="name" value="{{name}}" />
@@ -172,8 +175,9 @@
         </button>
       </div>
       <div class="modal-footer">
-        <div class="modal-body">
+        <div class="task-delete-modal-body">
           <form method="POST" id="delete-task-form">
+            {% csrf_token %}
           </form>
         </div>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -225,17 +229,13 @@
         </form> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
       </div>
     </div>
   </div>
 </div>
 <!-- End of Subtask Create Modal -->
-
-<!-- Start of Subtask Edit Modal -->
-
-<!-- End of Subtask Edit Modal-->
 
 <!-- Start of Subtask Delete Modal -->
 
@@ -251,109 +251,8 @@
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
+  <script src="../../static/todolist/js/todolist.js"></script>
   <script>
-    var pageCurrentId;
-    var pageCurrentTask;
-
-    var frm = $('#task-form');    
-    $( document ).ready(function() {
-
-      $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{csrf_token}}' }
-      });
-
-      $("#task-form-submit").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-          type: frm.attr('method'),
-          url: frm.attr('action'),
-          data: frm.serialize(),
-          success: function(data) {
-            console.log('Submission was successful.');
-          },
-          error: function(data) {
-            console.log('An error occurred.');
-          },
-        });
-      });
-    });
-
-    $(document).ready(function() {
-      $(".edit-button").click(function() {
-        var currentIds = $(this).closest("tr").find("td");
-        var cell0 = $(currentIds).eq(0).text().trim();
-        var cell1 = $(currentIds).eq(1).text().trim();
-        var cell2 = $(currentIds).eq(2).text().trim();
-        $("#edit-name").val(cell0);
-        $("#edit-due_date").val(cell1);
-        $("#edit-due_time").val(cell2);
-        $("#TaskEditModal").modal('show');
-      });
-    });
-
-    var frm2 = $("#edit-task-form");
-    $(".edit-button").click(function(e) {
-      var taskId = $(this).attr('data-id');
-
-      var editURLString = window.location.origin + "/todolist/task-edit/" + taskId + "/";
-      //var edit2 = edit.concat(taskId, "/");
-      var deleteURLString = window.location.origin + "/todolist/task-delete/" + taskId + "/";
-      //var delete2 = delete3.concat(taskId, "/");
-
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#edit-task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm2.attr('method'),
-            // url: temp3,
-            url: editURLString,
-            data: frm2.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-    });
-
-    var frm3 = $('#delete-task-form');    
-    $(".delete-button").click(function(e) {
-      var currentId = $(this).attr('data-id');
-      var currentObject = $(this).closest("tr").find("td");
-      var currentName = $(currentObject).eq(0).text().trim();
-      console.log(currentName);
-      document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
-      deleteString = window.location.origin + "/todolist/task-delete/" + currentId + "/";
-      console.log(deleteString);
-    
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#delete-task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm3.attr('method'),
-            url: deleteString,
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-    });
-
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {
@@ -361,52 +260,6 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-
-    $(".table-row").click(function(e) {
-      pageCurrentId = $(this).data('id');
-      var currentObj = $(this).closest("tr").find("td");
-      pageCurrentTask = $(currentObj).eq(0).text().trim();
-      var urlString = window.location.origin + "/todolist/subtasks/" + pageCurrentId;
-      console.log(urlString);
-      $('.subtask-view-modal-body').load(urlString);
-    })
-
-    $("#add-subtask-button").click(function(e) {
-      var subtaskCreateString = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
-      //var otherString = window.location.origin + "/subtask_form.html";
-      console.log(subtaskCreateString);
-      $(".close-button").click();
-      $(".subtask-create-modal-body").load(subtaskCreateString);
-      $("#SubtaskCreateModal").modal("show");
-    });
-
-    $("#subtask-form-submit").click(function(e) {
-      var createSubtaskURLString = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
-      var frm4 = $("#subtask-create-form");
-      var formData = {
-        task: frm4.serialize(),
-        name: $("#subtask-name").val(),
-      }
-      console.log(frm4.serialize());
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        e.preventDefault();
-        $.ajax({
-          type: frm4.attr('method'),
-          url: createSubtaskURLString,
-          data: frm4.serialize(),
-          success: function(data) {
-            console.log('Submission was successful.');
-          },
-          error: function(data) {
-            console.log('An error occurred.');
-          },
-        });
-      });
-    });
   </script>
 
 {% endblock javascripts %}

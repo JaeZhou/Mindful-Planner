@@ -1,0 +1,58 @@
+<div class="table-responsive p-0">
+    <table class="table align-items-center mb-0">
+      <tbody>
+        {% if subtasks|length %}
+        {% for subtask in subtasks %}
+        <tr>
+          <td style="text-align: right; width: 100px;">
+                {% if subtask.complete %}
+                     <input type="checkbox" name="checkbox" checked onclick='assignCheckToDatabase(this, "{{subtask.id}}", "{{subtask.task}}", "{{subtask.name}}",  "{{subtask.complete}}")'>
+                {% else %}
+                <input type="checkbox" name="checkbox" onclick='assignCheckToDatabase(this, "{{subtask.id}}", "{{subtask.task}}", "{{subtask.name}}",  "{{subtask.complete}}")'>
+                {% endif %}                       
+                <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
+            </div>
+            </a>
+          </td>
+          <td>
+              <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{subtask.name}}</p> 
+          </td>    
+          <td class="float: right;" id = "">
+            <i class="fa fa-close text-secondary"></i>
+          </td>
+        </tr>
+      {% endfor %}
+      {% else %}
+      <b style='padding-left: 20px'>No current subtasks!</b>
+      {% endif %}
+    </table>
+  </div>
+
+  <script >
+    function assignCheckToDatabase(e, assignmentId, assignmentTask, assignmentName, assignmentComplete) {
+      taskId = getCurrentId();
+      checkboxUrl= window.location.origin + "/todolist/subtask-edit/" + taskId + "/";
+      console.log(checkboxUrl);
+      $(document).ready(function() {
+        $.ajaxSetup({
+          headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+
+        $.ajax({
+          type: "POST",
+          url: checkboxUrl,
+          data: {
+            task: assignmentTask,
+            name: assignmentName,
+            complete: !assignmentComplete,
+          },
+          success: function(data) {
+            console.log('Submission was successful.');
+          },
+          error: function(data) {
+            console.log('An error occurred.');
+          },
+        });
+      });
+    };
+  </script>

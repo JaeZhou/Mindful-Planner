@@ -1,6 +1,11 @@
 from django import forms
 from .models import Task, Subtask
 
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = "__all__"
+
 class SubtaskForm(forms.ModelForm):
   
     # create meta class
@@ -9,5 +14,5 @@ class SubtaskForm(forms.ModelForm):
         model = Subtask
   
         # specify fields to be used
-        fields = ["task", "name"]
-        widgets = {"task": forms.HiddenInput()}
+        fields = ["task", "name", "complete"]
+        widgets = {"task": forms.HiddenInput(), "complete": forms.HiddenInput(),}

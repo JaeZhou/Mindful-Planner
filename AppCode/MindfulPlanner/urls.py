@@ -34,7 +34,6 @@ urlpatterns = [
     path('todolist/', include('todolist.urls')),
     # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
-    path('todolist/', include('todolist.urls')),
     path('dailyschedule/', include('dailyschedule.urls')),
   
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
@@ -45,7 +44,6 @@ urlpatterns = [
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
-    path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
     path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
     path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'), 
 

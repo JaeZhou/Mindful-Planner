@@ -7,6 +7,7 @@ from . import views
 
 
 urlpatterns = [
+    path('', ToDoList.as_view(template_name='todolist.html'), name='todolist'),
     path('task-create/', TaskCreate.as_view(), name='task-create'),
     path('task-edit/<int:pk>/', TaskEdit.as_view(), name='task-edit'),
     path('task-delete/<int:pk>/', TaskDelete.as_view(), name='task-delete'),
