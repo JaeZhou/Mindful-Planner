@@ -52,24 +52,6 @@ class TaskDelete(DeleteView):
     # context_object_name = 'task'
     success_url = reverse_lazy('todolist')
 
-# class TaskDelete(DeleteView):
-#     template_name = 'task_delete.html'
-#     success_url = reverse_lazy('todolist')
-
-#     def get_object(self):
-#         id_ = self.kwargs.get("id")
-#         return get_object_or_404(Task, id=id_)
-
-def orderTasks(request):
-    #get all tasks
-    allTasks = Task.objects.all()
-    #sort by day and time
-    sortedTasks = Task.objects.order_by('due_date').order_by('due_time')
-
-    context = {'allsortedTasks': sortedTasks}
-
-    return render(request, 'todolist', context)
-
 def subtask_view(request, id):
     t = Task.objects.get(id=id)
     subtasks = t.subtask_set.all()
@@ -89,10 +71,16 @@ class SubtaskCreate(CreateView):
 #Task editing view in task_form.html
 class SubtaskEdit(UpdateView):
     model = Subtask
-    form_class = SubtaskForm
+    form_class = SubtaskForm    
     template_name = 'subtask_form.html'
-    #No user field needed
     success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        st = Subtask.objects.get(pk = self.kwargs['pk'])
+        st.complete = not st.complete
+        st.save()
+        context = super(SubtaskEdit, self).get_context_data(**kwargs)
+        return context    
 
 #Task deleting view in task_form.html
 class SubtaskDelete(DeleteView):
@@ -100,3 +88,9 @@ class SubtaskDelete(DeleteView):
     template_name = 'subtask_delete.html'
     context_object_name = 'subtask'
     success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        st = Subtask.objects.get(pk = self.kwargs['pk'])
+        st.remove()
+        context = super(SubtaskEdit, self).get_context_data(**kwargs)
+        return context    
