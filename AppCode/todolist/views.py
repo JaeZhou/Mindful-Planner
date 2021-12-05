@@ -29,6 +29,7 @@ class TaskCreate(CreateView):
     template_name = 'task_form.html'
     form_class = TaskForm
     success_url = reverse_lazy('todolist')
+
     #Validates that user form is valid
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -52,10 +53,29 @@ class TaskDelete(DeleteView):
     # context_object_name = 'task'
     success_url = reverse_lazy('todolist')
 
-def subtask_view(request, id):
-    t = Task.objects.get(id=id)
-    subtasks = t.subtask_set.all()
-    return render(request, 'subtasks.html', {'subtasks': subtasks})
+class SubtaskView(ListView):
+    model = Subtask
+    template_name = 'subtasks.html'
+    success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        context = super(SubtaskView, self).get_context_data(**kwargs)
+        t = Task.objects.get(id=self.kwargs['pk'])
+        subtasks = t.subtask_set.all()
+        context['subtasks'] = subtasks
+        return context
+
+class SubtaskRerenderView(ListView):
+    model = Subtask
+    template_name = 'subtasks.html'
+    success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        context = super(SubtaskRerenderView, self).get_context_data(**kwargs)
+        t = Task.objects.get(id=self.kwargs['pk'])
+        subtasks = t.subtask_set.all()
+        context['subtasks'] = subtasks
+        return context
 
 #Task creating view in task_form.html
 class SubtaskCreate(CreateView):
