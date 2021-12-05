@@ -26,13 +26,14 @@ $(document).ready(function() {
   $(".add-task-button").click(function(e) {
     taskCreateURLString = window.location.origin + "/todolist/task-create/";
     $(".task-create-modal-body").load(taskCreateURLString);
-  
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": '{{csrf_token}}' }
-    });
+  });
   
     $("#task-form-submit").click(function(e) {
       var frm = $("#task-create-form");
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+      $(".task-create-close-button").click();
       e.preventDefault();
       $.ajax({
         type: frm.attr('method'),
@@ -45,13 +46,11 @@ $(document).ready(function() {
           console.log('An error occurred.');
         },
       });
-      $(".task-create-close-button").click();
     });
-  });
 
   $(".edit-button").click(function(e) {
     var taskId = $(this).attr('data-id');
-    var taskEditURLString = window.location.origin + "/todolist/task-edit/" + taskId + "/";
+    taskEditURLString = window.location.origin + "/todolist/task-edit/" + taskId + "/";
 
     var currentIds = $(this).closest("tr").find("td");
     var cell0 = $(currentIds).eq(0).text().trim();
@@ -61,48 +60,48 @@ $(document).ready(function() {
     $("#edit-due_date").val(cell1);
     $("#edit-due_time").val(cell2);
     $("#TaskEditModal").modal('toggle');
+  });
 
-    $("#edit-task-form-submit").click(function(e) {
-      $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{csrf_token}}' }
-      });
+  $("#edit-task-form-submit").click(function(e) {
+    $.ajaxSetup({
+      headers: { "X-CSRFToken": '{{csrf_token}}' }
+    });
 
-      var frm2 = $("#task-edit-form");
-      console.log(frm2.serialize());
-      e.preventDefault();
-      $.ajax({
-        type: frm2.attr('method'),
-        url: taskEditURLString,
-        data: frm2.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
+    var frm2 = $("#task-edit-form");
+    console.log(frm2.serialize());
+    e.preventDefault();
+    $.ajax({
+      type: frm2.attr('method'),
+      url: taskEditURLString,
+      data: frm2.serialize(),
+      success: function(data) {
+        console.log('Submission was successful.');
+      },
+      error: function(data) {
+        console.log('An error occurred.');
+      },
     });
   });
 
   $(".delete-button").click(function(e) {
     taskDeleteURLString = window.location.origin + "/todolist/task-delete/" + $(this).attr('data-id') + "/";
     document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + $(this).closest("tr").find("td").eq(0).text().trim() + "'?";
+  });
 
-    $("#delete-task-form-submit").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: taskDeleteURLString,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-        },
-        success: function(data) {
-          console.log("Submission was successful");
-        },
-        error: function(data) {
-          console.log("An error occurred");
-        },
-      });
+  $("#delete-task-form-submit").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: taskDeleteURLString,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+      },
+      success: function(data) {
+        console.log("Submission was successful");
+      },
+      error: function(data) {
+        console.log("An error occurred");
+      },
     });
   });
 
@@ -117,31 +116,32 @@ $(document).ready(function() {
   });
 
   $("#add-subtask-button").click(function(e) {
-    var createSubtaskURL = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
+    createSubtaskURL = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
     console.log(createSubtaskURL);
     $(".close-button").click();
     $(".subtask-create-modal-body").load(createSubtaskURL);
     $("#SubtaskViewModal").modal("hide");
     $("#SubtaskCreateModal").modal("toggle");
-
-    $("#subtask-form-submit").click(function(e) {
-      var frm4 = $("#subtask-create-form");
-      $("#SubtaskCreateModal").modal("toggle");   
-      e.preventDefault();
-      $.ajax({
-        type: frm4.attr('method'),
-        url: createSubtaskURL,
-        data: frm4.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
-      $("#SubtaskViewModal").modal("show");
-    });
   });
 
-  
+  $("#subtask-form-submit").click(function(e) {
+    var frm4 = $("#subtask-create-form");
+    $("#SubtaskCreateModal").modal("toggle");   
+    e.preventDefault();
+    $.ajax({
+      type: frm4.attr('method'),
+      url: createSubtaskURL,
+      data: frm4.serialize(),
+      success: function(data) {
+        console.log('Submission was successful.');
+      },
+      error: function(data) {
+        console.log('An error occurred.');
+      },  
+    });
+    var subtaskRerenderViewURL = window.location.origin + "/todolist/subtasks-rerender/" + pageCurrentId;
+    console.log(subtaskRerenderViewURL);
+    $(".subtask-view-modal-body").load(subtaskRerenderViewURL);
+    $("#SubtaskViewModal").modal("show");
+  });
 });
