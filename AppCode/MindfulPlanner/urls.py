@@ -32,6 +32,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('customers/', include("customers.urls")),
     path('todolist/', include('todolist.urls')),
+    path('inbox/', include('notifications.urls')),
     # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
     path('dailyschedule/', include('dailyschedule.urls')),
@@ -45,7 +46,7 @@ urlpatterns = [
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
     path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
-    path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'), 
+    path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
