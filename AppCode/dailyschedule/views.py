@@ -1,4 +1,5 @@
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
@@ -10,6 +11,8 @@ from django.http import HttpResponseRedirect
 import datetime
 from .forms import SubtaskForm, TaskForm, EventForm
 
+
+@login_required
 def all_tasks(request):
     today = datetime.date.today()
     task_list = Task.objects.filter(user=request.user, due_date__year=today.year, due_date__month=today.month, due_date__day=today.day)
