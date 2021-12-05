@@ -45,6 +45,7 @@
                       {% for task in tasks %}
                       <tr>
                         <td>
+                          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
                           <div class="d-flex px-2 py-1"> 
                             <div class="d-flex flex-column justify-content-center">
                                                 
@@ -177,8 +178,9 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div class="task-edit-modal-body">
                 <form method="POST" id="edit-task-form">
+                  {% csrf_token %}
                   <div>
                     <label for="name">Name </label>
                     <input id="edit-name" type="text" name="name" value="{{name}}" />
@@ -217,7 +219,11 @@
                   </button>
                 </div>
                 <div class="modal-footer">
-                  <form method="POST" id="delete-task-form"></form>
+                  <div class="task-delete-modal-body">
+                    <form method="POST" id="delete-task-form">
+                        {% csrf_token %}
+                    </form>
+                  </div>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                   <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
                 </div>
@@ -238,6 +244,7 @@
               </div>
               <div class="modal-body">
                 <form method="POST" id="edit-event-form">
+                  {% csrf_token %}
                   <div>
                     <label for="name">Name </label>
                     <input id="edit-title" type="text" name="title" value="{{title}}" />
@@ -284,6 +291,7 @@
                   </button>
                 </div>
                 <div class="modal-footer">
+                  {% csrf_token %}
                   <form method="POST" id="delete-event-form"></form>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                   <button type="button" class="btn btn-primary" id="delete-event-form-submit">Yes</button>
@@ -293,6 +301,49 @@
         </div>
     <!-- END OF DELETE EVENT MODAL -->
 
+    <!-- START OF SUBTASK VIEW MODAL -->
+    <div class="modal fade" id="SubtaskViewModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskViewModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="SubtaskViewModalLabel">Subtasks</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="subtask-view-modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF SUBTASK VIEW MODAL -->
+
+    <!-- START OF SUBTASK CREATE MODAL -->    
+    <div class="modal fade" id="SubtaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskCreateModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="SubtaskCreateModalLabel">Add Subtask</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="subtask-create-modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF SUBTASK CREATE MODAL -->
+
     {% include "includes/footer.html" %}
     
   </div>
@@ -301,228 +352,7 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
-
-  <!-- START OF TASKS SCRIPTS -->
-  <script>
-      var frm = $('#task-form');    
-      $( document ).ready(function() {
-
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      $(".edit-button").click(function() {
-        var currentTds = $(this).closest("tr").find("td");
-        var cell0 = $(currentTds).eq(0).text().trim();
-        var cell1 = $(currentTds).eq(1).text().trim();
-        var cell2 = $(currentTds).eq(2).text().trim();
-        $("#edit-name").val(cell0);
-        $("#edit-due_date").val(cell1);
-        $("#edit-due_time").val(cell2);
-        $("#TaskEditModal").modal('show');
-      });
-    });
-  </script>
-
-  <script>
-      var frm2 = $("#edit-task-form");
-      $(".edit-button").click(function(e) {
-        var taskId = $(this).attr('data-id');
-
-        var editURLString = window.location.origin + "/dailyschedule/task-edit/" + taskId + "/";
-        var deleteURLString = window.location.origin + "/dailyschedule/task-delete/" + taskId + "/";
-
-        $(document).ready(function() {
-          $.ajaxSetup({
-            headers: { "X-CSRFToken": '{{csrf_token}}' }
-          });
-
-          $("#edit-task-form-submit").click(function(e) {
-            e.preventDefault();
-            $.ajax({
-              type: frm2.attr('method'),
-              // url: temp3,
-              url: editURLString,
-              data: frm2.serialize(),
-              success: function(data) {
-                console.log('Submission was successful.');
-              },
-              error: function(data) {
-                console.log('An error occurred.');
-              },
-            });
-          });
-        });
-      });
-  </script>
-
-  <script>
-    var frm3 = $('#delete-task-form');    
-    $(".delete-button").click(function(e) {
-      var currentId = $(this).attr('data-id');
-      var currentObject = $(this).closest("tr").find("td");
-      var currentName = $(currentObject).eq(0).text().trim();
-      console.log(currentName);
-      document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
-      deleteString = window.location.origin + "/dailyschedule/task-delete/" + currentId + "/";
-      console.log(deleteString);
-    
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#delete-task-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: frm3.attr('method'),
-            url: deleteString,
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-    });
-  </script>
-  <!-- END OF TASKS SCRIPTS -->
-
-  <!-- START OF EVENT SCRIPTS -->
-  <script>
-      var eventfrm = $('#event-form');    
-      $( document ).ready(function() {
-
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#event-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: eventfrm.attr('method'),
-            url: eventfrm.attr('action'),
-            data: eventfrm.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      $(".edit-button-event").click(function() {
-        var currentTds = $(this).closest("tr").find("td");
-        var cell0 = $(currentTds).eq(0).text().trim();
-        var cell1 = $(currentTds).eq(1).text().trim();
-        var cell2 = $(currentTds).eq(2).text().trim();
-        var cell3 = $(currentTds).eq(3).text().trim();
-        var cell4 = $(currentTds).eq(4).text().trim();
-        $("#edit-title").val(cell0);
-        $("#edit-day").val(cell1);
-        $("#edit-start_time").val(cell2);
-        $("#edit-end_time").val(cell3);
-        $("#edit-description").val(cell4);
-        $("#EventEditModal").modal('show');
-      });
-    });
-  </script>
-
-  <script>
-      var eventfrm2 = $("#edit-event-form");
-      $(".edit-button-event").click(function(e) {
-      var eventId = $(this).attr('data-id');
-
-      var editURLString = window.location.origin + "/dailyschedule/event-edit/" + eventId + "/";
-      //var edit2 = edit.concat(taskId, "/");
-      var deleteURLString = window.location.origin + "/dailyschedule/event-delete/" + eventId + "/";
-      //var delete2 = delete3.concat(taskId, "/");
-
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#edit-event-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: eventfrm2.attr('method'),
-            // url: temp3,
-            url: editURLString,
-            data: eventfrm2.serialize(),
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-      });
-  </script>
-
-  <script>
-    var eventfrm3 = $('#delete-event-form');    
-    $(".delete-button-event").click(function(e) {
-      var currentId = $(this).attr('data-id');
-      var currentObject = $(this).closest("tr").find("td");
-      var currentName = $(currentObject).eq(0).text().trim();
-      document.getElementById("EventDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
-      deleteString = window.location.origin + "/dailyschedule/event-delete/" + currentId + "/";
-    
-      $(document).ready(function() {
-        $.ajaxSetup({
-          headers: { "X-CSRFToken": '{{csrf_token}}' }
-        });
-
-        $("#delete-event-form-submit").click(function(e) {
-          e.preventDefault();
-          $.ajax({
-            type: eventfrm3.attr('method'),
-            url: deleteString,
-            success: function(data) {
-              console.log('Submission was successful.');
-            },
-            error: function(data) {
-              console.log('An error occurred.');
-            },
-          });
-        });
-      });
-    });
-  </script>
-
-  <!-- END OF EVENT SCRIPTS -->
-
+  <script src="../../static/dailyschedule/js/dailyschedule.js"></script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -532,5 +362,4 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-
 {% endblock javascripts %}

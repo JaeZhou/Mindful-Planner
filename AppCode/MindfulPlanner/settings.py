@@ -77,7 +77,9 @@ ROOT_URLCONF = 'MindfulPlanner.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR.joinpath('templates')), str(BASE_DIR.joinpath('todolist/templates/todolist'))],
+        'DIRS': [str(BASE_DIR.joinpath('templates')), 
+                 str(BASE_DIR.joinpath('todolist/templates/todolist')), 
+                 str(BASE_DIR.joinpath('dailyschedule/templates/dailyschedule'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
