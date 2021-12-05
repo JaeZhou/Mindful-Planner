@@ -77,9 +77,10 @@
       </div>
       <div class="modal-body">
         <!-- Yes Option -> takes you to pomodoro timer -->
-        <button id="notification-accept" type="button" class="btn btn-primary"  data-dismiss="modal" style="background-color:blue">Yes</button>
+        <button type="button" onclick="location.href='{% url 'notifications:export_csv' "1" %}'" name='export_csv' class="btn btn-secondary" data-dismiss="modal" style="background-color:blue">Yes</button>
         <!-- No Option -> Closes and sends ML algo a no response -->
-        <button id="notification-deny" type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:red">No</button>
+        <button type="button" onclick="location.href='{% url 'notifications:export_csv' "0" %}'" name='export_csv' class="btn btn-secondary" data-dismiss="modal" style="background-color:red">No</button>
+        
       </div>
     </div>
   </div>
@@ -87,23 +88,5 @@
 
 
 <!-- Specific JS goes HERE --> 
-{% block javascripts %}
-
-<script type="text/javascript">
-    document.getElementById("notification-accept").onclick = function() {
-
-        <!-- Need to send data to ML algo-->
-        <!-- DATETIME AND BOOLEAN OF YES OR NO NEED TO BE UPDATED ON THE CSV -->
-
-        location.href="http://127.0.0.1:8000/timer/"
-    };
-</script>
-
-<script type="text/javascript">
-    document.getElementById("notification-deny").onclick = function() {
-      
-        <!-- Need to send data to ML algo-->
-    };
-</script>
-
+{% block javascripts %}        
 {% endblock javascripts %}
