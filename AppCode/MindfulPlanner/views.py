@@ -1,20 +1,57 @@
 # -*- encoding: utf-8 -*-
 
 
+from os import name
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse
 from django import template
+from django.shortcuts import render
+from plotly.offline import plot
+import plotly.graph_objs as go
+from plotly.graph_objs import Scatter
+import pandas as pd
 
 @login_required(login_url="/login/")
 def index(request):
     
     context = {}
     context['segment'] = 'index'
-
+    
     html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
+
+def index(request):
+    df = pd.read_csv('user_schedule_update.xls')
+    context = {}
+    context['graph'] = 'plot_div'
+    x_data = df['Hour'].head(24)
+    y_data = df['Make_Schedule_count_byweek']
+    # plot_div = go.Scatter(
+    #             x =x_data,
+    #             y =y_data,
+    #             name = "Predicted hours",
+    #             marker = dict(color = 'rgb(178, 102, 255)'))
+
+    # fig = go.Layout(title="Predicted Hours this week",
+    #                xaxis= dict(title= 'Hour',ticklen= 5,zeroline= False), 
+    #                yaxis= dict(title= 'Total Booking Counts',ticklen= 5,zeroline= False))
+   
+  
+    plot_div = plot([Scatter(x=x_data, y=y_data,
+                        mode='lines', name='test',
+                        opacity=0.5, marker_color='green')],
+                        output_type='div')
+
+    # layout = go.Layout(title = 'Line Plot: Mean House Values by Bedrooms and Year',
+    #           xaxis= dict(title= 'Year',ticklen= 5,zeroline= False),
+    #           yaxis= dict(title= 'Mean House Values',ticklen= 5,zeroline= False)
+    #          )
+    # fig = go.Figure(data = plot_div, layout = fig)
+    
+    return render(request, "index.html", context={'plot_div': plot_div})
+    # return render(request, "index.html", context={'plot_div': fig})
 
 def mainpage(request):
     
