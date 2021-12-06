@@ -142,7 +142,7 @@ USE_TZ = True
 EMAIL_FROM_USER = 'MindfulPlannerOfficial@gmail.com' # Need to change this to hide info
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'MindfulPlannerOfficial@gmail.com'
-EMAIL_HOST_PASSWORD = 'NickisaBitch' # .......
+EMAIL_HOST_PASSWORD = 'thisisourgenericmppassword1056' # .......
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
