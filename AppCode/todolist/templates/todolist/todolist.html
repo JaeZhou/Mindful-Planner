@@ -27,7 +27,7 @@
             <a data-toggle="modal" href="#TaskCreateModal"><button class="add-task-button btn btn-secondary">Add Task</button></a>
             
           </div>
-            <div class="table-responsive p-0">
+            <div class="subtasks-table table-responsive p-0">
               {% if tasks|length %}
               <table class="table align-items-center mb-0">
                 <thead>
@@ -137,7 +137,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="task-edit-close-button btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
       </div>
     </div>
@@ -161,7 +161,7 @@
             {% csrf_token %}
           </form>
         </div>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-secondary" id="delete-task-cancel" data-dismiss="modal">No</button>
         <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
       </div>
     </div>
@@ -183,7 +183,7 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="subtask-close-button btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
       </div>
     </div>
@@ -204,7 +204,7 @@
       <div class="subtask-create-modal-body">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" id="subtask-create-close-button" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
       </div>
     </div>

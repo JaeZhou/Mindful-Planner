@@ -23,6 +23,19 @@ class ToDoList(ListView):
         context['tasks'] = self.model.objects.filter(user=self.request.user)
         return context
 
+class ToDoListRerender(ListView):
+    model = Task
+    template_name = 'rerender_tasks.html'
+    
+    def get_queryset(self):
+        tasks = self.model.objects.filter(user=self.request.user)
+        return tasks
+
+    def get_context_data(self, **kwargs):
+        context = super(ToDoListRerender, self).get_context_data(**kwargs)
+        context['tasks'] = self.model.objects.filter(user=self.request.user)
+        return context       
+
 #Task creating view in task_form.html
 class TaskCreate(CreateView):
     model = Task
