@@ -9,7 +9,7 @@ from . import views
 
 urlpatterns = [
     path('', login_required(ToDoList.as_view(template_name='todolist.html')), name='todolist'),
-    path('rerender/', login_require(ToDoListRerender.as_view(template_name='rerender_tasks.html')), name='todolist-rerender'),
+    path('rerender/', login_required(ToDoListRerender.as_view(template_name='rerender_tasks.html')), name='todolist-rerender'),
     path('task-create/', TaskCreate.as_view(), name='task-create'),
     path('task-edit/<int:pk>/', TaskEdit.as_view(), name='task-edit'),
     path('task-delete/<int:pk>/', TaskDelete.as_view(), name='task-delete'),
