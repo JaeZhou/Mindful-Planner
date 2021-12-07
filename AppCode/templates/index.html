@@ -14,26 +14,6 @@
   </ol>
 </nav>
 
-<!-- <div class="container-fluid py-4">
-  <div class="row w-auto">
-    <div class="col-lg-7 mb-lg-0 mb-4">
-      <div class="card">
-        <div class="card-body p-3">
-          <div class="row"> 
-            <div class="col-lg-6">
-              <div class="card-body px-0 pt-0 pb-2">
-                <body onload="startTime()">
-                  <h4 class="font-weight-bolder txt-lg">Today is {% now "N j, Y" %} </h4>
-                  <h4 class="tile=content" id="txt"></h4>
-                </body>
-              </div>
-           </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
     <div class="container-fluid py-4">
       <div class="row w-auto">
@@ -48,7 +28,8 @@
                       <form action="/result/">
                             <input type="submit" value="Predict Result">
                             </form>
-                            <h6>{{result}}</h6>
+                            <h6>{{result_1st}}</h6>
+                            <h6>{{result_2nd}}</h6>
                   </div>
               </div>
             </div>
@@ -464,18 +445,6 @@
         <div class="col-lg-5 col-md-6">
           <div class="card">
             <div class="card-header pb-0">
-              <!-- <h4 class="font-weight-bolder txt-lg">Open Invitations</h4> -->
-             <!-- <div class="table-responsive">
-                
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Timeline</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Task Title</th>
-                    </tr>
-                  </thead>
-                </table> 
-              </div> -->
               <div class="row"> 
                 <div class="col-lg-9">
                   <div class="card-body px-0 pt-0 pb-2">
@@ -488,23 +457,6 @@
               </div>
               </div>
             </div>
-<!--          
-            <div class="col-lg-5 col-md-6">
-              <div class="card">
-                <div class="card-body p-3">
-                  <div class="row"> 
-                    <div class="col-lg-9">
-                      <div class="card-body px-0 pt-0 pb-2">
-                        <body onload="startTime()">
-                          <h4 class="font-weight-bolder txt-lg">Today is {% now "N j, Y" %} </h4>
-                          <h4 class="tile=content" id="txt"></h4>
-                        </body>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
         </div>
 </div>
 

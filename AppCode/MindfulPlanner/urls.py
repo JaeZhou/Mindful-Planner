@@ -44,6 +44,7 @@ urlpatterns = [
     
     # path for result of machine learning
     path('result/', views.result, name='result'),
+  
     # The home page
     path('dashboard/', views.index, name='home'),
 
