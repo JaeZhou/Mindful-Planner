@@ -15,5 +15,16 @@ class Task(models.Model):
     #     order_with_respect_to = "due_date"
     #     order_with_respect_to = "due_time"
 
+    class Meta:
+        ordering = ['due_date', 'due_time']
+
+    def __str__(self):
+        return self.name
+
+class Subtask(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=200)
+    complete = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name

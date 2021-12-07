@@ -1,0 +1,240 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} To-Do list {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% load static %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent mb-0 pb-1 px-0 me-sm-6 me-12">
+    <li class="breadcrumb-item"><a class="opacity-8 text-dark" href="/dashboard/">Mindful Planner</a></li>
+    <li class="breadcrumb-item text-dark active" aria-current="page">
+     To-Do List
+    </li>
+  </ol>
+</nav>
+
+  <div class="container-fluid py-4">
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>To-Do List</h6>
+            <a data-toggle="modal" href="#TaskCreateModal"><button class="add-task-button btn btn-secondary">Add Task</button></a>
+            
+          </div>
+            <div class="table-responsive p-0">
+              {% if tasks|length %}
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Task Title</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Time</th>
+                   
+                    <th class="text-secondary opacity-7"></th>
+                  </tr>
+                </thead>
+                <tbody id="task-table-body">
+                  <!-- for list that'll display each task -->
+                  {% for task in tasks %}
+                  <tr>
+                    <td>
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                       <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                                                 
+                          <h6 id="task-name" class="mb-0 text-sm">{{task.name}}</h6>
+                        </div>
+                      </div>
+                      </a>
+                    </td>
+                    <td>
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+                      </a>
+                    </td>
+                    <td>
+                      <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+                        <p id="task-due-time" class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+                      </a>
+                    </td>
+              
+                    <td class="align-middle" id = "">
+                      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                      </a>
+                      
+                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" id="edit-delete" aria-labelledby="dropdownTable">
+                      <li><button class="edit-button dropdown-item border-radius-md" data-id = {{task.id}} data-toggle="modal" href="#TaskEditModal">Edit</button></li>
+                      <li><button class="delete-button dropdown-item border-radius-md" data-id = {{task.id}} data-toggle="modal" href="#TaskDeleteModal">Delete</button></li>
+                      
+                      </ul>
+                    </td>
+                  </tr>
+                {% endfor %}
+                
+              </table>
+              {% else %}
+                    <b style='padding-left: 20px'>No current tasks!</b>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Start of Task Create Modal -->
+<div class="modal fade" id="TaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="TaskCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskCreateModalLabel">Add Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="task-create-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="task-create-close-button btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="task-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Task Create Modal -->
+
+<!-- Start of Task Edit Modal -->
+<div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskEditModalLabel">Edit Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="task-edit-modal-body">
+        <form method="POST" id="task-edit-form">
+          {% csrf_token %}
+          <div>
+            <label for="name">Name </label>
+            <input id="edit-name" type="text" name="name" value="{{name}}" />
+          </div>
+          <div>
+            <label for="due_date">Due Date</label>
+          <input id="edit-due_date" type="text" name="due_date" value="{{due_date}}" />
+          </div>
+          <div>
+            <label for="due_time">Due Time</label>
+          <input id="edit-due_time" type="text" name="due_time" value="{{due_time}}" />
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Task Edit Modal -->
+
+<!-- Start of Task Delete Modal -->
+<div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TaskDeleteModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <div class="task-delete-modal-body">
+          <form method="POST" id="delete-task-form">
+            {% csrf_token %}
+          </form>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Task Delete Modal -->
+
+<!-- Start of Subtask View Modal -->
+<div class="modal fade" id="SubtaskViewModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskViewModalLabel">Subtasks</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-view-modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask View Modal -->
+
+<!-- Start of Subtask Create Modal -->
+<div class="modal fade" id="SubtaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SubtaskCreateModalLabel">Add Subtask</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="subtask-create-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Subtask Create Modal -->
+
+<!-- Start of Subtask Delete Modal -->
+
+<!-- End of SUbtask Delete Modal -->
+   
+
+    {% include "includes/footer.html" %}
+    
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="../../static/todolist/js/todolist.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+{% endblock javascripts %}

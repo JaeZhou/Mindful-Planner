@@ -12,6 +12,9 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from plotly.graph_objs import Scatter
 import pandas as pd
+from django.contrib.auth.models import User
+from todolist.models import Task
+from calendarapp.models import Event
 
 # Libraries supports for Machine Learning part
 from statsmodels.tsa.arima.model import ARIMA
@@ -21,12 +24,15 @@ import numpy as np
 import statsmodels.api as sm
 import pandas as pd
 
+
+# Loads Dashboard Page
+
 @login_required(login_url="/login/")
 def index(request):
     
     context = {}
     context['segment'] = 'index'
-    
+
     html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
 
@@ -61,8 +67,22 @@ def index(request):
     return render(request, "index.html", context={'plot_div': plot_div})
     # return render(request, "index.html", context={'plot_div': fig})
 
-def mainpage(request):
+
+    # Generate the task list and event list
+    task_list = Task.objects.filter(user=request.user)
+    event_list = Event.objects.filter(user=request.user)
+    context['tasks'] = task_list
+    context['events'] = event_list
+
+    graph = [50, 40, 300, 220, 500, 250, 400, 230, 500]
+    context['data_set'] = graph
     
+
+    html_template = loader.get_template( 'index.html')
+    return HttpResponse(html_template.render(context, request))
+
+# Loads Landing Page
+def mainpage(request):
     context = {}
     context['segment'] = 'index'
     html_template = loader.get_template( 'mainpage.html' )

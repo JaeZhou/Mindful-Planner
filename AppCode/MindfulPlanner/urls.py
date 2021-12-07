@@ -22,15 +22,19 @@ from django.views.generic.list import ListView
 from django.conf.urls.static import static
 from todolist.views import ToDoList
 from MindfulPlanner import views
+import notifications.urls
 from calendarapp.views import Calendar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('allauth.urls')),
     path('customers/', include("customers.urls")),
-
     path('todolist/', include('todolist.urls')),
+    path('inbox/', include('notifications.urls')),
+    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+
     path('dailyschedule/', include('dailyschedule.urls')),
   
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
@@ -43,8 +47,8 @@ urlpatterns = [
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
-    path('tables/', ToDoList.as_view(template_name='tables.html'), name='tables'),
     path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
+    path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
