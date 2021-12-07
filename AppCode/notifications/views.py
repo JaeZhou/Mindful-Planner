@@ -12,7 +12,6 @@ import csv
 #from .models import Task
 
 def export_respone(request, choice):
-    print(request)
     filename = "User_schedule.csv"
     today = datetime.now()
 

@@ -28,6 +28,7 @@ import pandas as pd
 # Loads Dashboard Page
 
 @login_required(login_url="/login/")
+
 def index(request):
     
     context = {}
@@ -82,13 +83,14 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 # Loads Landing Page
+@login_required
 def mainpage(request):
     context = {}
     context['segment'] = 'index'
     html_template = loader.get_template( 'mainpage.html' )
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required
 def pages(request):
     context = {}
     # All resource paths end in .html.

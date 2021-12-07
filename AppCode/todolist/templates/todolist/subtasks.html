@@ -34,10 +34,6 @@
         document.getElementById("no-subtasks").removeAttribute("hidden");
     }
 
-    function addRow(name) {
-      document.getElementById("subtasks-list").addRow();
-    }
-
     $(".subtask-checkbox").click(function(e) {
       var subtaskId = $(this).attr('data-id');
       var editSubtaskURL = window.location.origin + "/todolist/subtask-edit/" + subtaskId + "/";

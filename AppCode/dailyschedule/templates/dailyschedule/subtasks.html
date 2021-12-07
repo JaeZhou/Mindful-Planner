@@ -1,0 +1,72 @@
+<div class="table-responsive p-0">
+    <table class="table align-items-center mb-0">
+      <tbody>
+        {% if subtasks|length %}
+        {% for subtask in subtasks %}
+        <tr>
+          <td style="text-align: right; width: 100px;">
+                {% if subtask.complete %}
+                     <input class="subtask-checkbox" type="checkbox" name="checkbox" data-id="{{subtask.id}}" checked>
+                     {% else %}
+                    <input class="subtask-checkbox" type="checkbox" name="checkbox" data-id="{{subtask.id}}">
+                    {% endif %}                       
+            </div>
+            </a>
+          </td>
+          <td>
+              <p id="task-due-date" class="text-xs font-weight-bold mb-0">{{subtask.name}}</p> 
+          </td>    
+          <td class="float: right;" id = "">
+            <i style="cursor:pointer;" class="delete-subtask fa fa-close text-secondary" data-id="{{subtask.id}}"></i>
+          </td>
+        </tr>
+      {% endfor %}
+      {% else %}
+      <b style='padding-left: 20px'>No current subtasks!</b>
+      {% endif %}
+    </table>
+  </div>
+  {% block javascripts %}
+
+  <script>
+    $(".subtask-checkbox").click(function(e) {
+      var subtaskId = $(this).attr('data-id');
+      var editSubtaskURL = window.location.origin + "/todolist/subtask-edit/" + subtaskId + "/";
+    
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+
+      $.ajax({
+        type: "POST",
+        url: editSubtaskURL,
+        success: function(data) {
+          console.log("Submission successful.");
+        },
+        error: function(data) {
+          console.log("An error occurred.");
+        },
+      });
+    });
+
+    $(".delete-subtask").click(function(e) {
+      var deleteId = $(this).attr('data-id');
+      var deleteSubtaskURL = window.location.origin + "/todolist/subtask-delete/" + deleteId + "/";
+      console.log(deleteSubtaskURL);
+      $.ajax({
+        type: "POST",
+        url: deleteSubtaskURL,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+        },
+        success: function(data) {
+          console.log("Submission successful.");
+        },
+        error: function(data) {
+          console.log("An error occurred.");
+        },
+      });
+    });
+  </script>
+
+{% endblock javascripts %}

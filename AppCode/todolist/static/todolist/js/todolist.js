@@ -21,8 +21,14 @@ function getCookie(name) {
   return cookieValue;
 }
 
-$(document).ready(function() {
+function deleteRow(row) {
+  document.getElementById("tasks-table-body").deleteRow(row.parentNode.parentNode.rowIndex);
+  if(document.getElementById("tasks-table-body").rows.length == 0)
+    document.getElementById("no-tasks").removeAttribute("hidden");
+}
 
+$(document).ready(function() {
+  taskRerenderURLString = window.location.origin + "/todolist/rerender/";
   $(".add-task-button").click(function(e) {
     taskCreateURLString = window.location.origin + "/todolist/task-create/";
     $(".task-create-modal-body").load(taskCreateURLString);
@@ -41,6 +47,7 @@ $(document).ready(function() {
         data: frm.serialize(),
         success: function(data) {
           console.log('Submission was successful.');
+          $(".subtasks-table").load(taskRerenderURLString);
         },
         error: function(data) {
           console.log('An error occurred.');
@@ -76,6 +83,9 @@ $(document).ready(function() {
       data: frm2.serialize(),
       success: function(data) {
         console.log('Submission was successful.');
+        $(".subtasks-table").load(taskRerenderURLString);
+        $("#TaskEditModal").modal('toggle');
+        $('.modal-backdrop').remove();
       },
       error: function(data) {
         console.log('An error occurred.');
@@ -98,6 +108,8 @@ $(document).ready(function() {
       },
       success: function(data) {
         console.log("Submission was successful");
+        $("#delete-task-cancel").click();
+        $(".subtasks-table").load(taskRerenderURLString);
       },
       error: function(data) {
         console.log("An error occurred");
@@ -118,7 +130,7 @@ $(document).ready(function() {
   $("#add-subtask-button").click(function(e) {
     createSubtaskURL = window.location.origin + "/todolist/subtask-create/" + pageCurrentId + "/";
     console.log(createSubtaskURL);
-    $(".close-button").click();
+    $(".subtask-close-button").click();
     $(".subtask-create-modal-body").load(createSubtaskURL);
     $("#SubtaskViewModal").modal("hide");
     $("#SubtaskCreateModal").modal("toggle");
@@ -143,5 +155,9 @@ $(document).ready(function() {
     console.log(subtaskRerenderViewURL);
     $(".subtask-view-modal-body").load(subtaskRerenderViewURL);
     $("#SubtaskViewModal").modal("show");
+  });
+
+  $(".subtask-close-button").click(function(e) {
+    $("#SubtaskViewModal").modal("hide");
   });
 });
