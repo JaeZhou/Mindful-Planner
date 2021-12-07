@@ -37,7 +37,7 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 def index(request):
-    df = pd.read_csv('user_schedule_update.xls')
+    df = pd.read_csv('User_schedule_update.xls')
     context = {}
     context['graph'] = 'plot_div'
     x_data = df['Hour'].head(24)
@@ -112,35 +112,8 @@ def pages(request):
         return HttpResponse(html_template.render(context, request))
 
 def result(request):
-    # load dataset
-    date_rng = pd.date_range(start='5/01/2021', end='10/30/2021', freq='H')
-    df = pd.DataFrame(date_rng, columns=['Time'])
-    df['Time'] = pd.to_datetime(df['Time'], format='%H:%M:%S')
-    df['Hour'] = df['Time'].dt.hour
 
-    df1 = df[df['Hour'] < 8]
-    df2 = df[(df['Hour'] >= 8) & (df['Hour'] < 12)]
-    df3 = df[(df['Hour'] >= 12) & (df['Hour'] < 15)]
-    df4 = df[(df['Hour'] >= 15) & (df['Hour'] < 18)]
-    df5 = df[(df['Hour'] >= 18) & (df['Hour'] < 24)]
-    #################################Make Schedule######################################################
-    df1['Make_Schedule'] = np.random.choice([1, 0], size=(len(df1)), p=[.10, .90])
-    df2['Make_Schedule'] = np.random.choice([1, 0], size=(len(df2)), p=[.25, .75])
-    df3['Make_Schedule'] = np.random.choice([1, 0], size=(len(df3)), p=[.35, .65])
-    df4['Make_Schedule'] = np.random.choice([1, 0], size=(len(df4)), p=[.60, .40])
-    df5['Make_Schedule'] = np.random.choice([1, 0], size=(len(df5)), p=[.20, .80])
-
-    df_schedule = pd.concat([df1, df2, df3, df4, df5])
-    df_schedule = df_schedule.sort_values(by="Time")
-
-    ##################################Extrct Day/month/year#############################################
-    df_schedule['Day'] = pd.DatetimeIndex(df_schedule['Time']).day
-    df_schedule['Month'] = pd.DatetimeIndex(df_schedule['Time']).month
-    df_schedule['Year'] = pd.DatetimeIndex(df_schedule['Time']).year
-    df_schedule['week_number'] = df_schedule['Time'].dt.week
-    ##################################Save data of user book to data base ##############################
-    filename = "User_schedule.csv"
-    df_schedule.to_csv(filename, index=False)
+    df_schedule = pd.read_csv('User_schedule.csv')
     df_schedule.drop(['Day', 'Month', 'Year', 'Time'], axis=1, inplace=True)
     # display(df_schedule.head(20))
     df_schedule['Make_Schedule_count_byweek'] = df_schedule.groupby(['week_number', 'Hour'])['Make_Schedule'].transform(
