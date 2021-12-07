@@ -43,30 +43,17 @@ def index(request):
     context['graph'] = 'plot_div'
     x_data = df['Hour'].head(24)
     y_data = df['Make_Schedule_count_byweek']
-    # plot_div = go.Scatter(
-    #             x =x_data,
-    #             y =y_data,
-    #             name = "Predicted hours",
-    #             marker = dict(color = 'rgb(178, 102, 255)'))
 
-    # fig = go.Layout(title="Predicted Hours this week",
-    #                xaxis= dict(title= 'Hour',ticklen= 5,zeroline= False), 
-    #                yaxis= dict(title= 'Total Booking Counts',ticklen= 5,zeroline= False))
-   
-  
-    plot_div = plot([Scatter(x=x_data, y=y_data,
+    plot_div = plot({
+                      'data': [Scatter(x=x_data, y=y_data,
                         mode='lines', name='test',
                         opacity=0.5, marker_color='green')],
-                        output_type='div')
+                       'layout': {'title': 'Schedule', 'xaxis': {'title': 'Hours'}, 'yaxis': {'title': 'Booking Counts '}}
+                    }, output_type='div')
 
-    # layout = go.Layout(title = 'Line Plot: Mean House Values by Bedrooms and Year',
-    #           xaxis= dict(title= 'Year',ticklen= 5,zeroline= False),
-    #           yaxis= dict(title= 'Mean House Values',ticklen= 5,zeroline= False)
-    #          )
-    # fig = go.Figure(data = plot_div, layout = fig)
     
     return render(request, "index.html", context={'plot_div': plot_div})
-    # return render(request, "index.html", context={'plot_div': fig})
+
 
 
     # Generate the task list and event list
@@ -182,5 +169,21 @@ def result(request):
             second_max_value = predictions[i]
 
     second_max_index = predictions.index(second_max_value)
-    result_expected = 'The first priority hour: '+str(max_index)+':00'+'\nThe second priority hour: ' +str(second_max_index)+':00' 
-    return render(request,'index.html',{'result': result_expected})
+    result_expected_1st = 'The first priority hour: '+str(max_index)+':00'
+    result_expected_2nd = 'The second priority hour: ' +str(second_max_index)+':00' 
+    
+    # Graph
+    df = pd.read_csv('User_schedule_update.xls')
+    context = {}
+    context['graph'] = 'plot_div'
+    x_data = df['Hour'].head(24)
+    y_data = df['Make_Schedule_count_byweek']
+    plot_div = plot({
+                      'data': [Scatter(x=x_data, y=y_data,
+                        mode='lines', name='test',
+                        opacity=0.5, marker_color='green')],
+                       'layout': {'title': 'Schedule', 'xaxis': {'title': 'Hours'}, 'yaxis': {'title': 'Booking Counts '}}
+                    }, output_type='div')
+
+    return render(request,'index.html',{'result_1st': result_expected_1st,'result_2nd': result_expected_2nd, 'plot_div': plot_div})
+
