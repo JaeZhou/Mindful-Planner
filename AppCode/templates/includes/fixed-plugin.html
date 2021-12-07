@@ -34,27 +34,6 @@
           <p>Click the button to toggle between dark and light mode for this page.</p>
         </div>
           <button onclick="myFunction()">Toggle dark mode</button>
-        <div class="mt-3">
-          <h6 class="mb-0">Text Settings</h6>
-
-        </div>
-
-
-
-        <div class="mt-3">
-          <p class="text-sm">Text</p>
-        </div>
-
-        <div class="mt-3">
-          <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="language" onChange="update()">
-               <option selected>Open this select menu</option>
-               <option value="1">Small</option>
-               <option value="2">Medium</option>
-              <option value="3">Large</option>
-         </select>
-        <input type="text" id="value">
-		<input type="text" id="text">
-        </div>
 
         </div>
       </div>
@@ -63,35 +42,24 @@
   </div>
 
 <script>
-function myFunction() {
-  
-  var element = document.body;
-  element.classList.toggle("bg-gray-700");
-  const cards = document.querySelectorAll('.card');
-  const cardsheader = document.querySelectorAll('.card .card-header');
-  const cardsbody = document.querySelectorAll('.card .card-body');
+  function myFunction() {
+     var element1 = document.body;
+     var element2 = document.card;
+     element1.classList.toggle("bg-gray-700");
+     element2.classList.toggle("bg-dark");
+     element2.classList.toggle("bg-dark");
+  }
 
-
-  cards.forEach(card => card.classList.toggle('bg-dark'));
-  cardsheader.forEach(card => card.classList.toggle('bg-dark'));
-  cardsbody.forEach(card => card.classList.toggle('bg-dark'));
-  
-}
-function update() {
-	var select = document.getElementById('language');
-	var option = select.options[select.selectedIndex];
-    if(document.getElementById('language').value=='1')
-    {}
-	document.getElementById('value').value = option.value;
-	document.getElementById('text').value = option.text;
-	}
 
 </script>
 <style>
 
 
-.dark-mode {
-  background-color: black;
-  color: white;
-}
-</style>
+  .dark-mode {
+    background-color: black;
+    color: white;
+  }
+  </style>
+
+ 
+
