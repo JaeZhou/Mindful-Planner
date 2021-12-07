@@ -1,4 +1,5 @@
 from django.core.checks import messages
+from django.http.response import HttpResponseRedirect
 from accounts.models import User
 from django.shortcuts import redirect, render
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -10,6 +11,7 @@ from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnic
 from django.urls import reverse
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.contrib.auth import logout
 import threading
 
 def send_activation_email(user, request):
@@ -68,4 +70,8 @@ def activate_user(request, uidb64, token):
         return redirect(reverse('login'))
     
     return render(request, 'registration/activation-failed.html', {"user":user})
-    
+
+def logout_user(request):
+    logout(request)
+
+    return redirect(reverse('login'))

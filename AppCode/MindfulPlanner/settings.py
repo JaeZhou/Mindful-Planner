@@ -77,7 +77,9 @@ ROOT_URLCONF = 'MindfulPlanner.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR.joinpath('templates')), str(BASE_DIR.joinpath('todolist/templates/todolist'))],
+        'DIRS': [str(BASE_DIR.joinpath('templates')), 
+                 str(BASE_DIR.joinpath('todolist/templates/todolist')), 
+                 str(BASE_DIR.joinpath('dailyschedule/templates/dailyschedule'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,7 +142,7 @@ USE_TZ = True
 EMAIL_FROM_USER = 'MindfulPlannerOfficial@gmail.com' # Need to change this to hide info
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'MindfulPlannerOfficial@gmail.com'
-EMAIL_HOST_PASSWORD = 'NickisaBitch' # .......
+EMAIL_HOST_PASSWORD = 'thisisourgenericmppassword1056' # .......
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 

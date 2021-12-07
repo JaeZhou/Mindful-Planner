@@ -16,6 +16,7 @@ Including another URLconf
 from django import urls
 from django.contrib import admin
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
@@ -45,8 +46,8 @@ urlpatterns = [
     path('dashboard/', views.index, name='home'),
 
     path('', TemplateView.as_view(template_name='mainpage.html'), name='hp'),
-    path('calendar/', Calendar.as_view(template_name='calendar.html'), name='calendar'),
-    path('timer/', TemplateView.as_view(template_name='timer.html'), name='timer'),
+    path('calendar/', login_required(Calendar.as_view(template_name='calendar.html')), name='calendar'),
+    path('timer/', login_required(TemplateView.as_view(template_name='timer.html')), name='timer'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
