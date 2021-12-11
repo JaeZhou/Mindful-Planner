@@ -31,7 +31,7 @@
   <script>
     $(".subtask-checkbox").click(function(e) {
       var subtaskId = $(this).attr('data-id');
-      var editSubtaskURL = window.location.origin + "/todolist/subtask-edit/" + subtaskId + "/";
+      var editSubtaskURL = window.location.origin + "/dailyschedule/subtask-edit/" + subtaskId + "/";
     
       $.ajaxSetup({
         headers: { "X-CSRFToken": '{{csrf_token}}' }
@@ -51,7 +51,7 @@
 
     $(".delete-subtask").click(function(e) {
       var deleteId = $(this).attr('data-id');
-      var deleteSubtaskURL = window.location.origin + "/todolist/subtask-delete/" + deleteId + "/";
+      var deleteSubtaskURL = window.location.origin + "/dailyschedule/subtask-delete/" + deleteId + "/";
       console.log(deleteSubtaskURL);
       $.ajax({
         type: "POST",
