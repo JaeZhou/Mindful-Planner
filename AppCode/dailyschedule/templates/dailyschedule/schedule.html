@@ -26,7 +26,7 @@
           <h3>Schedule For Today</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
-          <div class="table-responsive p-0">
+          <div class="subtasks-table table-responsive p-0">
 
             <h5 style="text-align:left; margin-top:20px; margin-left:20px">Tasks</h5>
 
@@ -56,9 +56,11 @@
                           </div>
                         </td>
                         <td>
+                          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
                           <p class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
                         </td>
                         <td class="align-middle">
+                          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
                           <p class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
                           <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                             Edit-->
@@ -321,7 +323,7 @@
             
           </div>
           <div class="modal-footer">
-            <button type="button" class="close-button btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="subtask-close-button btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
           </div>
         </div>
@@ -342,7 +344,7 @@
           <div class="subtask-create-modal-body">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="subtask-close-button" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" id="subtask-create-close-button" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
           </div>
         </div>
