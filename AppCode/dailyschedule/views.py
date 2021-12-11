@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 from todolist.models import Task, Subtask
 from calendarapp.models import Event
 from django.contrib import messages
@@ -37,6 +38,7 @@ def edit_task(request, id):
     task = get_object_or_404(Task, pk=id)
 
     form = TaskForm(instance=task)
+
     context = {'task':task, 'form':form}
 
     if task.user == request.user:
@@ -46,7 +48,6 @@ def edit_task(request, id):
 
         due_date = request.POST.get('due_date')
         task.due_date = datetime.datetime.strptime(due_date, "%m/%d/%Y").strftime("%Y-%m-%d")
-
 
         task.due_time = request.POST.get('due_time')
 
@@ -83,17 +84,24 @@ def edit_event(request, id):
 
     return render(request, 'schedule.html', context)
 
-def delete_event(request, id):
-    event = get_object_or_404(Event, pk=id)
-    context = {'event': event}
+# def delete_event(request, id):
+#     event = get_object_or_404(Event, pk=id)
+#     context = {'event': event}
 
-    if event.user == request.user:
-        event.delete()
-        messages.add_message(request, messages.SUCCESS, "Event Deleted.")
+#     if event.user == request.user:
+#         event.delete()
+#         messages.add_message(request, messages.SUCCESS, "Event Deleted.")
 
-        return HttpResponseRedirect(reverse('ds'))
+#         return HttpResponseRedirect(reverse('ds'))
 
-    return render(request, 'schedule.html', context)
+#     return render(request, 'schedule.html', context)
+
+#Task deleting view in task_form.html
+class EventDelete(DeleteView):
+    model = Event
+    template_name = 'event_delete.html'
+    # context_object_name = 'task'
+    success_url = reverse_lazy('ds')
 
 def subtask_view(request, id):
     t = Task.objects.get(id=id)
@@ -137,3 +145,15 @@ class SubtaskDelete(DetailView):
         st.remove()
         context = super(SubtaskEdit, self).get_context_data(**kwargs)
         return context    
+
+class SubtaskRerenderView(ListView):
+    model = Subtask
+    template_name = 'subtasks.html'
+    success_url = reverse_lazy('todolist')
+
+    def get_context_data(self, **kwargs):
+        context = super(SubtaskRerenderView, self).get_context_data(**kwargs)
+        t = Task.objects.get(id=self.kwargs['pk'])
+        subtasks = t.subtask_set.all()
+        context['subtasks'] = subtasks
+        return context

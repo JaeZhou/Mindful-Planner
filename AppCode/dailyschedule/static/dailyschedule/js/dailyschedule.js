@@ -21,18 +21,25 @@ function getCookie(name) {
   return cookieValue;
 }
 
-$(document).ready(function() {
+function deleteRow(row) {
+  document.getElementById("tasks-table-body").deleteRow(row.parentNode.parentNode.rowIndex);
+  if(document.getElementById("tasks-table-body").rows.length == 0)
+    document.getElementById("no-tasks").removeAttribute("hidden");
+}
 
+$(document).ready(function() {
+  taskRerenderURLString = window.location.origin + "/dailyschedule/rerender/";
   $(".add-task-button").click(function(e) {
     taskCreateURLString = window.location.origin + "/dailyschedule/task-create/";
     $(".task-create-modal-body").load(taskCreateURLString);
-  
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": '{{csrf_token}}' }
-    });
+  });
   
     $("#task-form-submit").click(function(e) {
       var frm = $("#task-create-form");
+      $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+      $(".task-create-close-button").click();
       e.preventDefault();
       $.ajax({
         type: frm.attr('method'),
@@ -40,18 +47,17 @@ $(document).ready(function() {
         data: frm.serialize(),
         success: function(data) {
           console.log('Submission was successful.');
+          $(".subtasks-table").load(taskRerenderURLString);
         },
         error: function(data) {
           console.log('An error occurred.');
         },
       });
-      $(".task-create-close-button").click();
     });
-  });
 
   $(".edit-button").click(function(e) {
     var taskId = $(this).attr('data-id');
-    var taskEditURLString = window.location.origin + "/dailyschedule/task-edit/" + taskId + "/";
+    taskEditURLString = window.location.origin + "/dailyschedule/task-edit/" + taskId + "/";
 
     var currentIds = $(this).closest("tr").find("td");
     var cell0 = $(currentIds).eq(0).text().trim();
@@ -61,48 +67,53 @@ $(document).ready(function() {
     $("#edit-due_date").val(cell1);
     $("#edit-due_time").val(cell2);
     $("#TaskEditModal").modal('toggle');
+  });
 
-    $("#edit-task-form-submit").click(function(e) {
-      $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{csrf_token}}' }
-      });
+  $("#edit-task-form-submit").click(function(e) {
+    $.ajaxSetup({
+      headers: { "X-CSRFToken": '{{csrf_token}}' }
+    });
 
-      var frm2 = $("#task-edit-form");
-      console.log(frm2.serialize());
-      e.preventDefault();
-      $.ajax({
-        type: frm2.attr('method'),
-        url: taskEditURLString,
-        data: frm2.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
+    var frm2 = $("#task-edit-form");
+    console.log(frm2.serialize());
+    e.preventDefault();
+    $.ajax({
+      type: frm2.attr('method'),
+      url: taskEditURLString,
+      data: frm2.serialize(),
+      success: function(data) {
+        console.log('Submission was successful.');
+        $(".subtasks-table").load(taskRerenderURLString);
+        $("#TaskEditModal").modal('toggle');
+        $('.modal-backdrop').remove();
+      },
+      error: function(data) {
+        console.log('An error occurred.');
+      },
     });
   });
 
   $(".delete-button").click(function(e) {
     taskDeleteURLString = window.location.origin + "/dailyschedule/task-delete/" + $(this).attr('data-id') + "/";
     document.getElementById("TaskDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + $(this).closest("tr").find("td").eq(0).text().trim() + "'?";
+  });
 
-    $("#delete-task-form-submit").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: taskDeleteURLString,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-        },
-        success: function(data) {
-          console.log("Submission was successful");
-        },
-        error: function(data) {
-          console.log("An error occurred");
-        },
-      });
+  $("#delete-task-form-submit").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: taskDeleteURLString,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+      },
+      success: function(data) {
+        console.log("Submission was successful");
+        $("#delete-task-cancel").click();
+        $(".subtasks-table").load(taskRerenderURLString);
+      },
+      error: function(data) {
+        console.log("An error occurred");
+      },
     });
   });
 
@@ -117,141 +128,36 @@ $(document).ready(function() {
   });
 
   $("#add-subtask-button").click(function(e) {
-    var createSubtaskURL = window.location.origin + "/dailyschedule/subtask-create/" + pageCurrentId + "/";
+    createSubtaskURL = window.location.origin + "/dailyschedule/subtask-create/" + pageCurrentId + "/";
     console.log(createSubtaskURL);
-    $(".close-button").click();
+    $(".subtask-close-button").click();
     $(".subtask-create-modal-body").load(createSubtaskURL);
     $("#SubtaskViewModal").modal("hide");
     $("#SubtaskCreateModal").modal("toggle");
-
-    $("#subtask-form-submit").click(function(e) {
-      var frm4 = $("#subtask-create-form");
-      $("#SubtaskCreateModal").modal("toggle");   
-      e.preventDefault();
-      $.ajax({
-        type: frm4.attr('method'),
-        url: createSubtaskURL,
-        data: frm4.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
-      $("#SubtaskViewModal").modal("show");
-    });
-  }); 
-
-
-  // START OF EVENT SCRIPTS
-
-  // Event Form Start //
-  var eventfrm = $('#event-form');    
-
-  $( document ).ready(function() {
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": '{{csrf_token}}' }
-    });
-
-    $("#event-form-submit").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: eventfrm.attr('method'),
-        url: eventfrm.attr('action'),
-        data: eventfrm.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
-    });
   });
 
-  $(document).ready(function() {
-    $(".edit-button-event").click(function() {
-      var currentTds = $(this).closest("tr").find("td");
-      var cell0 = $(currentTds).eq(0).text().trim();
-      var cell1 = $(currentTds).eq(1).text().trim();
-      var cell2 = $(currentTds).eq(2).text().trim();
-      var cell3 = $(currentTds).eq(3).text().trim();
-      var cell4 = $(currentTds).eq(4).text().trim();
-      $("#edit-title").val(cell0);
-      $("#edit-day").val(cell1);
-      $("#edit-start_time").val(cell2);
-      $("#edit-end_time").val(cell3);
-      $("#edit-description").val(cell4);
-      $("#EventEditModal").modal('show');
+  $("#subtask-form-submit").click(function(e) {
+    var frm4 = $("#subtask-create-form");
+    $("#SubtaskCreateModal").modal("toggle");   
+    e.preventDefault();
+    $.ajax({
+      type: frm4.attr('method'),
+      url: createSubtaskURL,
+      data: frm4.serialize(),
+      success: function(data) {
+        console.log('Submission was successful.');
+      },
+      error: function(data) {
+        console.log('An error occurred.');
+      },  
     });
+    var subtaskRerenderViewURL = window.location.origin + "/dailyschedule/subtasks-rerender/" + pageCurrentId;
+    console.log(subtaskRerenderViewURL);
+    $(".subtask-view-modal-body").load(subtaskRerenderViewURL);
+    $("#SubtaskViewModal").modal("show");
   });
-  // Event Edit End //
 
-  // Event Edit Start //
-  var eventfrm2 = $("#edit-event-form");
-
-  $(".edit-button-event").click(function(e) {
-  var eventId = $(this).attr('data-id');
-
-  var editURLString = window.location.origin + "/dailyschedule/event-edit/" + eventId + "/";
-  //var edit2 = edit.concat(taskId, "/");
-  var deleteURLString = window.location.origin + "/dailyschedule/event-delete/" + eventId + "/";
-  //var delete2 = delete3.concat(taskId, "/");
-
-  $(document).ready(function() {
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": '{{csrf_token}}' }
-    });
-
-    $("#edit-event-form-submit").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: eventfrm2.attr('method'),
-        // url: temp3,
-        url: editURLString,
-        data: eventfrm2.serialize(),
-        success: function(data) {
-          console.log('Submission was successful.');
-        },
-        error: function(data) {
-          console.log('An error occurred.');
-        },
-      });
-    });
+  $(".subtask-close-button").click(function(e) {
+    $("#SubtaskViewModal").modal("hide");
   });
-  });
-  // Event Edit End //
-
-  // Event Delete Start //
-  var eventfrm3 = $('#delete-event-form');
-
-  $(".delete-button-event").click(function(e) {
-    var currentId = $(this).attr('data-id');
-    var currentObject = $(this).closest("tr").find("td");
-    var currentName = $(currentObject).eq(0).text().trim();
-    document.getElementById("EventDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + currentName + "'?";
-    deleteString = window.location.origin + "/dailyschedule/event-delete/" + currentId + "/";
-
-    $(document).ready(function() {
-      $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{csrf_token}}' }
-      });
-
-      $("#delete-event-form-submit").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-          type: eventfrm3.attr('method'),
-          url: deleteString,
-          success: function(data) {
-            console.log('Submission was successful.');
-          },
-          error: function(data) {
-            console.log('An error occurred.');
-          },
-        });
-      });
-    });
-  });
-  // Event Delete Start //
 });
