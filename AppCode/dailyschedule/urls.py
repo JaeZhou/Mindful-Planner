@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 from . import views
 
@@ -15,4 +16,6 @@ urlpatterns = [
     path('subtask-create/<int:pk>/', views.SubtaskCreate.as_view(), name='subtask-create'),
     path('subtask-edit/<int:pk>/', views.SubtaskEdit.as_view(), name='subtask-edit'),
     path('subtask-delete/<int:pk>/', views.SubtaskDelete.as_view(), name='subtask-delete'),
+    path('rerender/', login_required(views.DailyScheduleListRerender.as_view(template_name='rr_tasks.html')), name='dailyschedule-rerender'),
+    
 ]

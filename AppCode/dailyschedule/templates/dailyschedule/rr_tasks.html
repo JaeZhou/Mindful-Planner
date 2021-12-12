@@ -1,0 +1,425 @@
+<!-- Check to see if there are any tasks.-->
+{% if tasks|length %}
+
+<table class="table align-items-center mb-0">
+  <thead>
+    <tr>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Task Date</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+    </tr>
+  </thead>
+
+  <tbody id="task-table-body">
+      <!-- for list that'll display each task -->
+      {% for task in tasks %}
+      <tr>
+        <td>
+          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+          <div class="d-flex px-2 py-1"> 
+            <div class="d-flex flex-column justify-content-center">
+                                
+              <h6 class="mb-0 text-sm">{{task.name}}</h6>
+            </div>
+          </div>
+        </td>
+        <td>
+          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+          <p class="text-xs font-weight-bold mb-0">{{task.due_date | date:"SHORT_DATE_FORMAT"}}</p> 
+        </td>
+        <td class="align-middle">
+          <a class="table-row" data-id = {{task.id}} data-toggle="modal" href="#SubtaskViewModal">
+          <p class="text-xs font-weight-bold mb-0">{{task.due_time | time:"H:i"}}</p> 
+          <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+            Edit-->
+          </a>
+        </td>
+        <td class="align-middle">
+        <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-ellipsis-v text-secondary"></i>
+        </a>
+        
+        <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" id="edit-delete" aria-labelledby="dropdownTable">
+        {% comment %} <li><a class="dropdown-item border-radius-md" href="{% url 'task-edit' task.id %}">Edit</a></li> {% endcomment %}
+        <li><a class="edit-button dropdown-item border-radius-md" data-id={{task.id}} data-toggle="modal" href="#TaskEditModal">Edit</a></li>
+        {% comment %} <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li> {% endcomment %}
+        <li><a class="delete-button dropdown-item border-radius-md" data-id={{task.id}} data-toggle="modal" href="#TaskDeleteModal">Delete</a></li>
+        </ul>
+        </td>
+        
+        </tr>
+      {% endfor %}
+
+  </tbody>
+</table>
+
+{% else %}
+
+<b style='padding-left: 20px'>No tasks are occurring today!</b>
+
+{% endif %}
+
+
+<!-- LOOPING THROUGH EVENTS -->
+<h5 style="text-align:left; margin-top:60px; margin-left:20px">Events</h5>
+
+<!-- Check to see if there are any events.-->
+{% if events|length %}
+
+<table class="table align-items-center mb-0">
+  <thead>
+    <tr>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Event Date</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Starting Time</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ending Time</th>
+      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+    </tr>
+  </thead>
+
+<tbody>
+
+<!-- for list that'll display each event -->
+{% for event in events %}
+    <tr>
+
+      <td>
+        <div class="d-flex px-2 py-1"> 
+          <div class="d-flex flex-column justify-content-center">
+                              
+            <h6 class="mb-0 text-sm">{{event.title}}</h6>
+          </div>
+        </div>
+      </td>
+
+      <td>
+        <p class="text-xs font-weight-bold mb-0">{{event.day | date:"SHORT_DATE_FORMAT"}}</p> 
+      </td>
+
+      <td>
+        <p class="text-xs font-weight-bold mb-0">{{event.startTime | time:"H:i"}}</p> 
+      </td>
+
+      <td>
+        <p class="text-xs font-weight-bold mb-0">{{event.endTime | time:"H:i"}}</p> 
+      </td>
+
+      
+      <td>
+        <p class="text-xs font-weight-bold mb-0">{{event.description}}</p> 
+      </td>
+
+
+      <td class="align-middle">
+      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fa fa-ellipsis-v text-secondary"></i>
+      </a>
+      
+      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+      <li><a class="edit-button-event dropdown-item border-radius-md" data-id={{event.id}} data-toggle="modal" href="#EventEditModal">Edit</a></li>
+      {% comment %} <li><a class="dropdown-item border-radius-md" href="javascript:;">Mark as Complete</a></li> {% endcomment %}
+      <li><a class="delete-button-event dropdown-item border-radius-md" data-id={{event.id}} data-toggle="modal" href="#EventDeleteModal">Delete</a></li>
+      </ul>
+      </td>
+      
+      
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+
+<b style='padding-left: 20px'>No events are occurring today!</b>
+
+{% endif %}
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- START OF EDIT TASK MODAL -->
+<div class="modal fade" id="TaskEditModal" tabindex="-1" role="dialog" aria-labelledby="TaskEditModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="TaskEditModalLabel">Edit Task</h5>
+<button id="modalBtnClick" type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="task-edit-modal-body">
+<form method="POST" id="task-edit-form">
+  {% csrf_token %}
+  <div>
+    <label for="name">Name </label>
+    <input id="edit-name" type="text" name="name" value="{{name}}" />
+  </div>
+  <div>
+    <label for="due_date">Due Date</label>
+  <input id="edit-due_date" type="text" name="due_date" value="{{due_date | date:"SHORT_DATE_FORMAT"}}" />
+  </div>
+  <div>
+    <label for="due_time">Due Time</label>
+  <input id="edit-due_time" type="text" name="due_time" value="{{due_time | time:"H:i"}}" />
+  </div> 
+  <div>
+    <label for="complete">Complete</label>
+  <input id="edit-complete" type="checkbox" />
+  </div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="task-edit-close-button btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary" id="edit-task-form-submit">Submit</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF EDIT TASK MODAL -->
+
+<!-- START OF DELETE TASK MODAL -->
+<div class="modal fade" id="TaskDeleteModal" tabindex="-1" role="dialog" aria-labelledby="TaskDeleteModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h5 class="modal-title" id="TaskDeleteModalLabel"></h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-footer">
+  <div class="task-delete-modal-body">
+    <form method="POST" id="delete-task-form">
+        {% csrf_token %}
+    </form>
+  </div>
+  <button type="button" class="btn btn-secondary" id="delete-task-cancel" data-dismiss="modal">No</button>
+  <button type="button" class="btn btn-primary" id="delete-task-form-submit">Yes</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF DELETE TASK MODAL -->
+
+<!-- START OF EDIT EVENT MODAL -->
+<div class="modal fade" id="EventEditModal" tabindex="-1" role="dialog" aria-labelledby="EventEditModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="EventEditModalLabel">Edit Event</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<form method="POST" id="edit-event-form">
+  {% csrf_token %}
+  <div>
+    <label for="name">Name </label>
+    <input id="edit-title" type="text" name="title" value="{{title}}" />
+  </div>
+  <div>
+    <label for="day">Day</label>
+  <input id="edit-day" type="text" name="day" value="{{day | date:"SHORT_DATE_FORMAT"}}" />
+  </div>
+  <div>
+    <label for="start_time">Start Time</label>
+  <input id="edit-start_time" type="text" name="start_time" value="{{start_time | time:"H:i"}}" />
+  </div> 
+  <div>
+    <label for="end_time">End Time</label>
+  <input id="edit-end_time" type="text" name="end_time" value="{{end_time | time:"H:i"}}" />
+  </div>
+  <div>
+    <label for="description">Description</label>
+  <input id="edit-description" type="text" name="description" value="{{description | time:"H:i"}}" />
+  </div> 
+  <div>
+    <label for="complete">Complete</label>
+  <input id="edit-complete" type="checkbox" />
+  </div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary" id="edit-event-form-submit" data-dismiss="modal">Submit</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF EDIT EVENT MODAL -->
+
+<!-- START OF DELETE EVENT MODAL -->
+<div class="modal fade" id="EventDeleteModal" tabindex="-1" role="dialog" aria-labelledby="EventDeleteModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h5 class="modal-title" id="EventDeleteModalLabel"></h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-footer">
+  <div class="event-delete-modal-body">
+      <form method="POST" id="delete-event-form">
+        {% csrf_token %}
+      </form>
+  </div>
+  
+  <button type="button" class="btn btn-secondary" id="delete-event-cancel" data-dismiss="modal">No</button>
+  <button type="button" class="btn btn-primary" id="delete-event-form-submit">Yes</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF DELETE EVENT MODAL -->
+
+<!-- START OF SUBTASK VIEW MODAL -->
+<div class="modal fade" id="SubtaskViewModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskViewModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="SubtaskViewModalLabel">Subtasks</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="subtask-view-modal-body">
+
+</div>
+<div class="modal-footer">
+<button type="button" class="subtask-close-button btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary" id="add-subtask-button">Add Subtask</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF SUBTASK VIEW MODAL -->
+
+<!-- START OF SUBTASK CREATE MODAL -->    
+<div class="modal fade" id="SubtaskCreateModal" tabindex="-1" role="dialog" aria-labelledby="SubtaskCreateModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="SubtaskCreateModalLabel">Add Subtask</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="subtask-create-modal-body">
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" id="subtask-create-close-button" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary" id="subtask-form-submit">Submit</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END OF SUBTASK CREATE MODAL -->
+
+</div>
+
+<script>
+// START OF EVENT SCRIPTS
+
+// Event Form Start //
+// var eventfrm = $('#event-form');   
+$("#event-form-submit").click(function(e) {
+var eventfrm = $("#event-create-form");
+$.ajaxSetup({
+headers: { "X-CSRFToken": '{{csrf_token}}' }
+});
+$(".event-create-close-button").click();
+e.preventDefault();
+$.ajax({
+type: eventfrm.attr('method'),
+url: eventfrm.attr('action'),
+data: eventfrm.serialize(),
+success: function(data) {
+console.log('Submission was successful.');
+
+},
+error: function(data) {
+console.log('An error occurred.');
+},
+});
+});
+
+$(".edit-button-event").click(function(e) {
+var eventId = $(this).attr('data-id');
+var editURLString = window.location.origin + "/dailyschedule/event-edit/" + eventId + "/";
+var currentTds = $(this).closest("tr").find("td");
+var cell0 = $(currentTds).eq(0).text().trim();
+var cell1 = $(currentTds).eq(1).text().trim();
+var cell2 = $(currentTds).eq(2).text().trim();
+var cell3 = $(currentTds).eq(3).text().trim();
+var cell4 = $(currentTds).eq(4).text().trim();
+$("#edit-title").val(cell0);
+$("#edit-day").val(cell1);
+$("#edit-start_time").val(cell2);
+$("#edit-end_time").val(cell3);
+$("#edit-description").val(cell4);
+$("#EventEditModal").modal('toggle');
+});
+
+$("#edit-event-form-submit").click(function(e) {
+$.ajaxSetup({
+headers: { "X-CSRFToken": '{{csrf_token}}' }
+});
+
+var editfrm2 = $('#event-edit-form');
+console.log(editfrm2.serialize());
+e.preventDefault();
+$.ajax({
+type: eventfrm2.attr('method'),
+url: editURLString,
+data: eventfrm2.serialize(),
+success: function(data) {
+console.log('Submission was successful.');
+$("#EventEditModal").modal('toggle');
+$('.modal-backdrop').remove();
+},
+error: function(data) {
+console.log('An error occurred.');
+},
+});
+});
+
+
+$(".delete-button-event").click(function(e) {
+eventDeleteURLString = window.location.origin + "/dailyschedule/event-delete/" + $(this).attr('data-id') + "/";
+document.getElementById("EventDeleteModalLabel").innerHTML = "Are you sure you want to delete '" + $(this).closest("tr").find("td").eq(0).text().trim() + "'?";
+});
+
+$("#delete-event-form-submit").click(function(e) {
+e.preventDefault();
+$.ajax({
+type: "POST",
+url: eventDeleteURLString,
+beforeSend: function(xhr) {
+xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+},
+success: function(data) {
+console.log("Submission was successful");
+$("#delete-event-cancel").click();
+},
+error: function(data) {
+console.log("An error occurred");
+},
+});
+});
+
+</script>
+<script src="../../static/dailyschedule/js/dailyschedule.js"></script>
+<script>
+var win = navigator.platform.indexOf('Win') > -1;
+if (win && document.querySelector('#sidenav-scrollbar')) {
+var options = {
+damping: '0.5'
+}
+Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+}
+</script>
