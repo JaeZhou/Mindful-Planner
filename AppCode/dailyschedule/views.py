@@ -68,6 +68,7 @@ def edit_event(request, id):
     if event.user == request.user:
         event.title = request.POST.get('title')
         day = request.POST.get('day')
+        print(day)
         event.day = datetime.datetime.strptime(day, "%m/%d/%Y").strftime("%Y-%m-%d")
 
         event.startTime = request.POST.get('start_time')
@@ -157,3 +158,19 @@ class SubtaskRerenderView(ListView):
         subtasks = t.subtask_set.all()
         context['subtasks'] = subtasks
         return context
+
+class DailyScheduleListRerender(ListView):
+    model = Task
+    events = Event
+    template_name = 'rr_tasks.html'
+    
+    def get_queryset(self):
+        tasks = self.model.objects.filter(user=self.request.user)
+        events = self.events.objects.filter(user=self.request.user)
+        return [tasks, events]
+
+    def get_context_data(self, **kwargs):
+        context = super(DailyScheduleListRerender, self).get_context_data(**kwargs)
+        context['tasks'] = self.model.objects.filter(user=self.request.user)
+        context['events'] = self.events.objects.filter(user=self.request.user)
+        return context  
